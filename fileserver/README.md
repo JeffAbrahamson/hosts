@@ -75,3 +75,7 @@ Add my ssh keys.
     # Copy configuration from $HOME/src/jma/hosts/siegfried/
     #   /etc/netatalk/AppleVolumes.default (setup serving directory and turn on time machine support)
     #   /etc/default/netatalk (turn on CNID_MEATD_RUN and AFPD_RUN)
+
+## Unison
+
+Copy the $HOME/.unison/ cache files from the old fileserver if available.
