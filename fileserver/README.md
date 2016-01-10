@@ -11,7 +11,7 @@
 
 ## Install needed software
 
-    sudo apt-get install emacs python
+    sudo apt-get install emacs python unison x11-apps
 
 
 # Disks
