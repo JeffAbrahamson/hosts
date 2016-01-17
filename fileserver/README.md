@@ -16,7 +16,7 @@
 
 # Disks
 
-sudo mkdir /d1 /d2
+    sudo mkdir /d1 /d2
 
 The disk labels are fs-2TB-1  fs-2TB-2.
 
@@ -26,8 +26,8 @@ The lsblk command can also be helpful in exploring attached block devices.
 
 So add these lines to /etc/fstab:
 
-LABEL=fs-2TB-1    /d1    ext4    errors=remount-ro    0    2
-LABEL=fs-2TB-2    /d2    ext4    errors=remount-ro    0    3
+    LABEL=fs-2TB-1    /d1    ext4    errors=remount-ro    0    2
+    LABEL=fs-2TB-2    /d2    ext4    errors=remount-ro    0    3
 
 # Accounts
 
@@ -67,7 +67,7 @@ Add my ssh keys.
 
 ## Install crontab
 
-    It should live in $DATA/hosts/$(hostname)
+It should live in `$DATA/hosts/$(hostname)`
 
 ## Setup timemachine for Stéphane
 
@@ -78,4 +78,4 @@ Add my ssh keys.
 
 ## Unison
 
-Copy the $HOME/.unison/ cache files from the old fileserver if available.
+Copy the `$HOME/.unison/` cache files from the old fileserver if available.
