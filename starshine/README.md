@@ -1,4 +1,4 @@
-This document describes what I did to set up starshine, my Dell
+This document describes what I did to set up `starshine`, my Dell
 Precision m3800 laptop.  Some of this is specific to me, but quite a
 lot is likely relevant to anyone running ubuntu on a Dell m3800 and/or
 on a HiDPI screen.
