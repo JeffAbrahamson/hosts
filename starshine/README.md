@@ -3,6 +3,7 @@ Precision m3800 laptop.  Some of this is specific to me, but quite a
 lot is likely relevant to anyone running ubuntu on a Dell m3800 and/or
 on a HiDPI screen.
 
+
 # Set up my environment
 
 ## ssh-keygen
@@ -17,7 +18,7 @@ Distribute them as needed.
 * Jellybooks key on Jellybooks hosts (via puppet commit)
 * Purple key to purple hosts (fog, blog)
 
-## Set up my environment
+## Set up my favourite git repositories
 
     cd
     mkdir -p src/jma
@@ -43,6 +44,9 @@ Distribute them as needed.
     (cd $HOME/src/jma; git clone jeffabrahamson.github.com)
     (cd $HOME/src/jma; git clone orange-butterfly)
 
+    cd $HOME/src; mkdir jellybooks
+
+
 # Run a modern i3 and keep it that way.
 
 Cf. http://i3wm.org/docs/repositories.html
@@ -52,6 +56,7 @@ Cf. http://i3wm.org/docs/repositories.html
     apt-get --allow-unauthenticated install sur5r-keyring
     apt-get update
     apt-get install i3
+
 
 # Tell X apps that this is a HiDPI display.
 
@@ -79,6 +84,7 @@ diagnose problems:
 
     xdpyinfo | grep resolution
 
+
 # Wifi
 
 Wifi doesn't work with the default ubuntu (15.10) install.
@@ -93,6 +99,7 @@ for that tip.
 I turn wifi back on after suspend in `i3-lock-suspend`
 (`dotfiles/i3`).
 
+
 # Function keys.
 
 The function keys are inverted (need to hit "fn" prefix to use
@@ -103,10 +110,12 @@ I can change this for my session by touching the function lock key
 
 There is a bios setting that fixes this permanently.
 
+
 # Middle mouse button
 
 I set `synclient TapButton3=2` in `dotfiles/X11/xsessionrc`.  It needs
 to know to switch based on this hostname.
+
 
 # Using page-up and page-down on the keyboard.
 
@@ -119,12 +128,14 @@ fine.
 * To reorder tabs in my browser, use `C-S-page up/down`.  It is important
   to touch Fn after Ctrl + Shift.
 
+
 # Touchscreen
 
 I use touchegg for the touchscreen.  The configuration lives in
-`dotfiles/touchegg/`.  Manual pages life at
+`dotfiles/touchegg/`.  Manual pages live at
 [AllGestures](https://code.google.com/p/touchegg/wiki/AllGestures) and
 [AllActions](https://code.google.com/p/touchegg/wiki/AllActions).
+
 
 # Font size in dmenu
 
@@ -135,6 +146,7 @@ I set a pango font in the dmenu invocation in dotfiles/i3/i3/config.
 Note that the space between the flag and the font name is mandatory
 but its absence doesn't produce an error message.
 
+
 # Notify
 
 Remove notify-osd (installed by default by ubuntu) and run dunst instead.
@@ -144,6 +156,12 @@ I potentially miss things.
 I start dunst against my config to get decent font size.  I install my
 dunst config from `dotfiles/i3`.  It installs to
 `$HOME/.config/dunst/dunstrc`.
+
+
+# Apps
+
+* Log in to firefox (firefox sync).  Tell srd of new password.
+
 
 # Things left to sort
 
