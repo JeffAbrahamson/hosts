@@ -63,7 +63,7 @@ Add my ssh keys.
     cd speedtest
     cp speedtest_cli.py $HOME/bin
     # Test it
-    $HOME/bin/speedtest_cli.py --simple
+    $HOME/bin/speedtest.py --simple
 
 ## Install crontab
 
@@ -79,3 +79,10 @@ It should live in `$DATA/hosts/$(hostname)`
 ## Unison
 
 Copy the `$HOME/.unison/` cache files from the old fileserver if available.
+
+## Things to do
+
+* Update disk information (/d3, /d4).
+* Set up sync on /d3, /d4.
+* Note that /d1 and /d2 should be on the USB3 ports.
+* Set up printer, document
