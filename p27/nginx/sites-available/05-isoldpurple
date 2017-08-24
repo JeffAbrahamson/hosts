@@ -1,0 +1,20 @@
+server {
+  listen              443 ssl;
+  server_name         www.ISoldPurple.com;
+
+  ssl_session_timeout 10m;
+
+  rewrite_log on;
+  index index.html;
+
+  root /var/www/html;
+
+  location / {
+  }
+}
+
+server {
+  listen 80;
+  server_name www.ISoldPurple.com;
+  return 301 https://$host$request_uri/;
+}

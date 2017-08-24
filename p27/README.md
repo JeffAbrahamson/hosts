@@ -18,30 +18,84 @@ In pseudo-code:
 
 ## Start
 
-	mkdir $HOME/.ssh
-	chmod 700 $HOME/.ssh
-
     sudo apt-get -y update
 	sudo apt-get -y upgrade
-	sudo apt-get -y install git emacs-nox letsencrypt
+	sudo apt-get -y install git emacs-nox letsencrypt ufw
 	
+	# With DigitalOcean, I start out with only root.  So create
+	# myself, then logout and log back in as me.  For password,
+	# cf. srd nantes.p27.eu
+	adduser jeff
+	addgroup jeff sudo
+	
+	sudo su - jeff
+
+	mkdir /home/jeff/.ssh
+	chmod 700 $HOME/.ssh
+
 	mkdir -p src/jma
 	cd src/jma
+	git clone https://github.com/JeffAbrahamson/dotfiles.git
+	(cd dotfiles && ./install.sh)
 	git clone https://github.com/JeffAbrahamson/hosts.git
 	cd hosts/p27
+	# In the rest of this, I will assume that cwd=hosts/p27.
+	
+	sudo dpkg-reconfigure locales
+	# I want en_GB.utf8 and fr_FR.utf8 added to the host.
 
-	# On my workstation:
-	rsync .ssh/id_rsa.pub www.p27.eu:.ssh/known_hosts
+## firewall
+
+The dotfile install installed a rudimentary firewall.  As of the time
+I'm writing this, I think that should be this:
+
+    sudo ufw default allow outgoing
+	sudo ufw default deny incoming
+	sudo ufw allow ssh/tcp
+	sudo ufw limit ssh
+	sudo ufw enable
+	sudo ufw status verbose
+
+
+## ssh
+
+Make sure sshd is secure.
+
+	# On my workstation.
+	rsync .ssh/id_rsa.pub www.p27.eu:.ssh/authorized_keys
 	# I'll also want to append the public key from any other hosts I use.
 
 	# Probably I want my sshd_config, but double-check that the
 	# distribution isn't offering anything new.
 	#
 	# Don't do this on vagrant where I needn't set up ssh certificates.
-	diff sshd_config /etc/ssh/sshd_config
-	cp sshd_config /etc/ssh/sshd_config
+	diff sshd/sshd_config /etc/ssh/sshd_config
+	sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+	sudo cp sshd/sshd_config /etc/ssh/sshd_config
 	sudo service sshd restart
 	## And now from another window confirm that ssh access still works. ####
+
+
+## nginx
+
+Install nginx:
+
+    sudo apt-get install -y nginx-full nginx-doc
+	sudo cp nginx/sites-available/* /etc/nginx/sites-available/
+
+	(cd /etc/nginx/sites-enabled && sudo rm default)
+    (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/01-www)
+	
+	sudo ufw allow http/tcp
+	sudo ufw allow https/tcp
+
+We want to serve https only.  The nginx site configs will promote http
+to https.
+
+    sudo apt-get install -y letsencrypt
+	sudo add-apt-repository ppa:certbot/certbot
+	sudo apt-get -y update
+	sudo apt-get -y install python-certbot-nginx
 
 
 ## mail
@@ -114,8 +168,6 @@ Tell postfix to update its database:
 ### SPF records
 
 
-
-## nginx
 
 ## postgresql
 
