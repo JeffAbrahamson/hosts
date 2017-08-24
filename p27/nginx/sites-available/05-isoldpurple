@@ -7,14 +7,28 @@ server {
   rewrite_log on;
   index index.html;
 
-  root /var/www/html;
+  root /var/www/isoldpurple;
 
   location / {
   }
+
+  ssl_certificate /etc/letsencrypt/live/isoldpurple.com/fullchain.pem;   # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/isoldpurple.com/privkey.pem; # managed by Certbot
+
 }
 
 server {
   listen 80;
   server_name www.ISoldPurple.com;
   return 301 https://$host$request_uri/;
+
+}
+
+
+# Redirect requests for ISoldPurple.com to www.ISoldPurple.com.
+server {
+  listen 80;
+  listen 443;
+  server_name ISoldPurple.com;
+  return 301 https://www.ISoldPurple.com$request_uri;
 }

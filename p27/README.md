@@ -75,6 +75,7 @@ Make sure sshd is secure.
 	sudo service sshd restart
 	## And now from another window confirm that ssh access still works. ####
 
+	sudo apt-get install -y fail2ban
 
 ## nginx
 
@@ -85,9 +86,11 @@ Install nginx:
 
 	(cd /etc/nginx/sites-enabled && sudo rm default)
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/01-www)
+    (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/05-isoldpurple)
 	
 	sudo ufw allow http/tcp
 	sudo ufw allow https/tcp
+	sudo service nginx reload
 
 We want to serve https only.  The nginx site configs will promote http
 to https.
@@ -96,6 +99,26 @@ to https.
 	sudo add-apt-repository ppa:certbot/certbot
 	sudo apt-get -y update
 	sudo apt-get -y install python-certbot-nginx
+
+    # In the following, I might need to manually edit files on the
+    # server to remove the reference to the certs that don't exist
+    # yet.
+	sudo certbot --nginx -d p27.eu -d www.p27.eu
+	# When asked, enter my email address.
+	# Certbot config is saved in /etc/letsencrypt/
+	sudo certbot --nginx -d isoldpurple.com -d www.isoldpurple.com
+
+	# And keep the certificates updated by putting this in root
+    # crontab (the time is arbitrary):
+	17 5 * * *   /usr/bin/certbot renew --quiet
+
+	# Populate my web sites.
+	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/p27-www.git)
+	sudo mkdir /var/www/p27
+	sudo cp -r ~/src/jma/p27-www/site/ /var/www/p27/
+	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/isoldpurple-www.git)
+	sudo mkdir /var/www/isoldpurple
+	sudo cp -r ~/src/jma/isoldpurple-www/site/ /var/www/isoldpurple/
 
 
 ## mail
@@ -148,9 +171,6 @@ Tell postfix to update its database:
 
     sudo postmap /etc/postfix/virtual
 	sudo service postfix restart
-
-
-### SSL/TLS
 
 
 ### anti-spam

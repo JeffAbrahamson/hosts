@@ -1,24 +1,38 @@
 server {
   listen              443 ssl;
   server_name         www.p27.eu;
-  ssl_certificate     /etc/ssl/localcerts/p27.eu.bundled.crt;
-  ssl_certificate_key /etc/ssl/localcerts/p27.eu.key;
-  ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
-  ssl_ciphers         HIGH:!aNULL:!MD5;
 
   ssl_session_timeout 10m;
 
   rewrite_log on;
   index index.html;
 
-  root /var/www/html;
+  root /var/www/p27;
 
   location / {
   }
+
+  ssl_certificate /etc/letsencrypt/live/p27.eu/fullchain.pem;   # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/p27.eu/privkey.pem; # managed by Certbot
+
 }
 
 server {
   listen 80;
   server_name www.p27.eu;
   return 301 https://$host$request_uri/;
+
+    # Redirect non-https traffic to https
+    # if ($scheme != "https") {
+    #     return 301 https://$host$request_uri;
+    # } # managed by Certbot
+
+}
+
+# Redirect requests for p27.eu to www.p27.eu.
+server {
+  listen 80;
+  listen 443;
+  server_name p27.eu;
+  return 301 https://www.p27.eu$request_uri;
 }
