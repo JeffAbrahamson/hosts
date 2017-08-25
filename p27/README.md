@@ -16,6 +16,15 @@ each step because something might have changed.
 Pull requests and bug reports are welcome (use github).
 
 
+There's a slightly dated but very nice (and long) tutorial at
+ArsTechnica that may be worth the read for those interested.
+
+    [part 1](https://arstechnica.com/information-technology/2014/02/how-to-run-your-own-e-mail-server-with-your-own-domain-part-1/)
+	[part 2](https://arstechnica.com/information-technology/2014/03/taking-e-mail-back-part-2-arming-your-server-with-postfix-dovecot/)
+	[part 3](https://arstechnica.com/information-technology/2014/03/taking-e-mail-back-part-3-fortifying-your-box-against-spammers/)
+	[part 4](https://arstechnica.com/information-technology/2014/04/taking-e-mail-back-part-4-the-finale-with-webmail-everything-after/)
+
+
 ## DNS
 
 My DNS zone file:
@@ -33,17 +42,26 @@ My DNS zone file:
 
 ## Start
 
-    sudo apt-get -y update
-	sudo apt-get -y upgrade
-	sudo apt-get -y install git emacs-nox letsencrypt ufw
-	
 	# With DigitalOcean, I start out with only root.  So create
 	# myself, then logout and log back in as me.  For password,
 	# cf. srd nantes.p27.eu
 	adduser jeff
 	addgroup jeff sudo
-	
+
+	# For the rest of this, I will assume I am me and so need to sudo.
 	sudo su - jeff
+
+    sudo apt-get -y update
+	sudo apt-get -y upgrade
+	sudo apt-get -y install git emacs-nox letsencrypt ufw
+	
+	# Set my timezone.  For a production server I would normally set
+    # to UTC.  But here I think I'd like to see mail headers in my
+    # home timezone.  So I set to Europe/Paris.
+	sudo dpkg-reconfigure tzdata
+
+	# I want en_GB.utf8 and fr_FR.utf8 added to the host.
+	sudo dpkg-reconfigure locales
 
 	mkdir /home/jeff/.ssh
 	chmod 700 $HOME/.ssh
@@ -56,8 +74,6 @@ My DNS zone file:
 	cd hosts/p27
 	# In the rest of this, I will assume that cwd=hosts/p27.
 	
-	sudo dpkg-reconfigure locales
-	# I want en_GB.utf8 and fr_FR.utf8 added to the host.
 
 ## firewall
 
@@ -253,6 +269,8 @@ assuming that local delivery means to an existing user with a unix
 account.
 Cf. srd p27-postfix-aliases
 Cf. http://www.postfix.org/VIRTUAL_README.html
+  Note that creating entries for abuse and for postmaster are
+  important for standards compliance.
 
     sudo emacs /etc/postfix/virtual
 
@@ -301,7 +319,7 @@ When I set up thunderbird, I specified
     server name: mail.p27.eu
 	user: jeff
 	connection: SSL/TLS
-	auth: encrypted
+	auth: normal
 
   smtp:
     server name: mail.p27.eu
@@ -315,9 +333,22 @@ In both cases, I provided my unix password.
 I'm not sure why encrypted auth fails on smtp, but since it goes over
 TLS, I think all is ok.
 
+Encrypted auth worked for a while with imap, then stopped, and I'm not
+sure why.  Same reasoning: it's going over TLS, so I think this is
+superfluous.
+
 
 ### anti-spam
 
+#### OpenDKIM
+
+#### SpamAssassin
+
+#### ClamAV ?
+
+#### SPF
+
+The SPF client test at http://www.emailsecuritygrader.com/ fails.
 
 ### anti-virus
 
