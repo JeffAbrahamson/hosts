@@ -82,15 +82,15 @@ Make sure sshd is secure.
 Install nginx:
 
     sudo apt-get install -y nginx-full nginx-doc
+	sudo cp nginx/nginx.conf /etc/nginx/nginx.conf
 	sudo cp nginx/sites-available/* /etc/nginx/sites-available/
 
 	(cd /etc/nginx/sites-enabled && sudo rm default)
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/01-www)
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/05-isoldpurple)
-	
+
 	sudo ufw allow http/tcp
 	sudo ufw allow https/tcp
-	sudo service nginx reload
 
 We want to serve https only.  The nginx site configs will promote http
 to https.
@@ -103,23 +103,42 @@ to https.
     # In the following, I might need to manually edit files on the
     # server to remove the reference to the certs that don't exist
     # yet.
-	sudo certbot --nginx -d p27.eu -d www.p27.eu
+	sudo certbot --agree-tos -m jeff@p27.eu --nginx -d p27.eu -d www.p27.eu
 	# When asked, enter my email address.
 	# Certbot config is saved in /etc/letsencrypt/
-	sudo certbot --nginx -d isoldpurple.com -d www.isoldpurple.com
+	sudo certbot --agree-tos -m jeff@p27.eu --nginx -d isoldpurple.com -d www.isoldpurple.com
 
 	# And keep the certificates updated by putting this in root
-    # crontab (the time is arbitrary):
+    # crontab (the time is arbitrary).  Note, however, that the full
+	# root crontab can just be pulled from crontab/root.
 	17 5 * * *   /usr/bin/certbot renew --quiet
 
-	# Populate my web sites.
-	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/p27-www.git)
-	sudo mkdir /var/www/p27
-	sudo cp -r ~/src/jma/p27-www/site/ /var/www/p27/
-	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/isoldpurple-www.git)
-	sudo mkdir /var/www/isoldpurple
-	sudo cp -r ~/src/jma/isoldpurple-www/site/ /var/www/isoldpurple/
+	# Don't allow weak Diffie-Hellman keys.
+	openssl dhparam -out dhparams.pem 2048 && sudo mv dhparams /etc/ssl/certs/
+	sudo service nginx reload
 
+	# Populate my web sites.
+	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/p27.git)
+	sudo mkdir /var/www/p27
+	sudo cp -r ~/src/jma/p27/site/ /var/www/p27/
+	(cd ~/src/jma && git clone https://github.com/JeffAbrahamson/isoldpurple.git)
+	sudo mkdir /var/www/isoldpurple
+	sudo cp -r ~/src/jma/isoldpurple/site/ /var/www/isoldpurple/
+
+	# Crontab files for root and for jeff are available at crontab/root
+	# and crontab/jeff.  The below is just explanation.
+	#
+	# I want static websites to auto-update once a day.  So I edit my
+    # crontab to add these lines.  In the case of p27, the site is
+    # generated from p27-src, so I'll eventually want to make a deploy
+    # key so that the auto-generation can happen on p27.
+	47 * * * *  cd /home/jeff/src/jma/p27 && /usr/bin/git pull --ff-only
+	48 * * * *  cd /home/jeff/src/jma/isoldpurple && /usr/bin/git pull --ff-only
+
+	# and root's crontab to add these lines:
+	57 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/p27/site/ /var/www/p27/
+	58 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/isoldpurple/site/ /var/www/isoldpurple/
+	
 
 ## mail
 
@@ -132,15 +151,28 @@ and configures them to talk to each other.
 
 Answers to questions:
 * internet site
-* the system name is p27.eu (no trailing period).
+* the system name is p27.eu (no trailing period, no host name).
 
-Let's set up an SSL certificate for postfix:
+I already generated certificates for p27.eu, and the root crontab will
+check daily to be sure it's up to date.  So I can just use that.
 
-    sudo letsencrypt certonly --standalone -d smtp.p27.eu
+I'm pretty sure dovecot installs with a self-certified certificate,
+which will cause problems.  Note that to let certbot bypass nginx
+(i.e., run a stand-alone web server on port 443), I need to stop nginx
+temporarily.  This only needs to happen during site setup, though (I
+think).
 
-Question answers:
-* email address: jeff@p27.eu
-* TOS: agree
+    sudo certbot certonly --agree-tos -m jeff@p27.eu --nginx -d nantes-1.p27.eu
+/*
+    sudo service nginx stop && \
+	  sudo certbot certonly --agree-tos -m jeff@p27.eu --standalone \
+	    -d mail.p27.eu; \
+	  sudo service nginx start
+*/
+    (cd /etc/dovecot && sudo rm dovecot.pem && \
+	 sudo ln -s /etc/letsencrypt/live/nantes-1.p27.eu/fullchain.pem dovecot.pem)
+    (cd /etc/dovecot && sudo rm private/dovecot.pem && \
+	 sudo ln -s /etc/letsencrypt/live/nantes-1.p27.eu/privkey.pem private/dovecot.pem)
 
 	sudo postconf -e 'smtpd_sasl_type = dovecot'
 	sudo postconf -e 'smtpd_sasl_path = private/auth'
@@ -149,6 +181,8 @@ Question answers:
 	sudo postconf -e 'broken_sasl_auth_clients = yes'
 	sudo postconf -e 'smtpd_sasl_auth_enable = yes'
 	sudo postconf -e 'smtpd_recipient_restrictions = permit_sasl_authenticated,permit_mynetworks,reject_unauth_destination'
+	sudo postconf -e 'home_mailbox = Maildir/'
+	sudo postconf -e 'mydomain = p27.eu'
 
     # Use TLS for both incoming and outgoing mail.
 	sudo postconf -e 'smtp_tls_security_level = may'
@@ -158,14 +192,45 @@ Question answers:
 	sudo postconf -e 'smtpd_tls_received_header = yes'
 
 	# Enable virtual alias mapping.
-	sudo postconf -e 'virtual_alias_domains = $mydomain'
+	sudo postconf -e 'virtual_alias_domains = p27.eu'
 	sudo postconf -e 'virtual_alias_maps = hash:/etc/postfix/virtual'
+
+Now I edit /etc/dovecot/conf.d/10-ssl.conf and change
+
+    ssl = yes
+	ssl_cert = /etc/dovecot/dovecot.pem
+	ssl_key = /etc/dovecot/private/dovecot.pem
+
+I might want to spot check this file:
+
+    sudo cp postfix/main.cf /etc/postfix/main.cf
+
+I'll need to open port 25 (smtp) and 993 (imap over SSL).  In
+addition, incoming smtp connections, after knocking at port 25, will
+need to use port 465 (SMTP over SSL) and/or 587 (SMTP AUTH, I think).
+
+    sudo ufw allow smtp/tcp
+	sudo ufw allow imaps/tcp
+	sudo ufw allow 465/tcp
+	sudo ufw allow 587/tcp
+
+At some point I'd like to tell dovecot not to list on 110 (unsecured
+pop3), 143 (unsecured imap), or 995 (pop3 over SSL, because I'm not
+using pop).  For now, I'm simply denying access to those ports (via
+ufw's default policy).
 
 And, finally, set up email aliases to map to users.
 
     sudo emacs /etc/postfix/virtual
 
 cf. srd p27-postfix-aliases
+
+At this point, I should check my configuration from the outside at all
+of these sites:
+
+	http://www.emailsecuritygrader.com/ 
+	https://ssl-tools.net/mailservers .
+	http://www.checktls.com/perl/TestReceiver.pl
 
 Tell postfix to update its database:
 

@@ -31,4 +31,8 @@ server {
   listen 443;
   server_name ISoldPurple.com;
   return 301 https://www.ISoldPurple.com$request_uri;
+
+  ssl_certificate /etc/letsencrypt/live/isoldpurple.com/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/isoldpurple.com/privkey.pem; # managed by Certbot
+
 }

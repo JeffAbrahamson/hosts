@@ -36,3 +36,14 @@ server {
   server_name p27.eu;
   return 301 https://www.p27.eu$request_uri;
 }
+
+# Redirect requests for nantes-1.p27.eu to www.p27.eu.  I don't
+# actually care about serving this, though it's fine for it to
+# redirect this way.  But I want the cert to be generated and renewed
+# for postfix.
+server {
+  listen 80;
+  listen 443;
+  server_name nantes-1.p27.eu;
+  return 301 https://www.p27.eu$request_uri;
+}
