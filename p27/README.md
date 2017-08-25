@@ -1,19 +1,34 @@
 # Setup for p27.eu
 
 This assumes the domain exists and that I've set up DNS and reverse
-correctly to point to it.
+correctly to point to it.  Note that srd is my password manager, where
+I put the secrets I use on the site.  If something refers to srd, just
+understand that you need to generate a password or enter PII for your
+site.
+
+Automating host setup isn't worthwhile because I don't anticipate
+doing this more than twice (once to set up, once again to make sure I
+can).  In addition, there's bitrot, and in the absence of frequent
+testing, automation wouldn't be reliable.  This guide is either help
+to someone else or a guide to me ages hence, when I'll have to verify
+each step because something might have changed.
+
+Pull requests and bug reports are welcome (use github).
 
 
 ## DNS
 
-In pseudo-code:
+My DNS zone file:
 
-    ip=1.2.3.4        # Where my server is.
-	www    A       $ip
-	data   CNAME   www
-	smtp   MX      www
-	@      MX      www
-	
+	@ 10800 IN A 138.197.178.0
+	nantes-1 10800 IN A 138.197.178.0
+	data 10800 IN CNAME nantes-1.p27.eu.
+	influxdb 10800 IN CNAME nantes-1.p27.eu.
+	mail 10800 IN CNAME nantes-1.p27.eu.
+	monitor 10800 IN CNAME nantes-1.p27.eu.
+	www 10800 IN CNAME nantes-1.p27.eu.
+	@ 10800 IN MX 50 nantes-1.p27.eu.
+	@ 10800 IN TXT "v=spf1 include:_mailcust.gandi.net ?all"
 
 
 ## Start
@@ -156,24 +171,27 @@ Answers to questions:
 I already generated certificates for p27.eu, and the root crontab will
 check daily to be sure it's up to date.  So I can just use that.
 
-I'm pretty sure dovecot installs with a self-certified certificate,
-which will cause problems.  Note that to let certbot bypass nginx
-(i.e., run a stand-alone web server on port 443), I need to stop nginx
-temporarily.  This only needs to happen during site setup, though (I
-think).
+Dovecot installs with a self-certified certificate, which will cause
+problems.  I have nginx configs for these names so that it's easy to
+generate and auto-update certificates.
 
     sudo certbot certonly --agree-tos -m jeff@p27.eu --nginx -d nantes-1.p27.eu
-/*
-    sudo service nginx stop && \
-	  sudo certbot certonly --agree-tos -m jeff@p27.eu --standalone \
-	    -d mail.p27.eu; \
-	  sudo service nginx start
-*/
-    (cd /etc/dovecot && sudo rm dovecot.pem && \
-	 sudo ln -s /etc/letsencrypt/live/nantes-1.p27.eu/fullchain.pem dovecot.pem)
-    (cd /etc/dovecot && sudo rm private/dovecot.pem && \
-	 sudo ln -s /etc/letsencrypt/live/nantes-1.p27.eu/privkey.pem private/dovecot.pem)
+    sudo certbot certonly --agree-tos -m jeff@p27.eu --nginx -d mail.p27.eu
 
+	# I thought I didn't need to care about the SSL keys in
+    # /etc/dovecot/ because I'll have specified the letsencrypt
+    # versions in /etc/dovecot/conf.d/10-ssl.conf and in
+    # /etc/postfix/main.cf.  But it turns out that it matters, and I'm
+    # not sure why.  So let's fix the links not to point to
+    # self-signed certificates.
+    (cd /etc/dovecot && sudo rm dovecot.pem && \
+	 sudo ln -s /etc/letsencrypt/live/mail.p27.eu/fullchain.pem dovecot.pem)
+    (cd /etc/dovecot && sudo rm private/dovecot.pem && \
+	 sudo ln -s /etc/letsencrypt/live/mail.p27.eu/privkey.pem private/dovecot.pem)
+
+	# I think the following simply edit /etc/postfix/main.cf.  So these
+	# commands are quite likely duplicating my copy of that file in git,
+	# which I copy in place 
 	sudo postconf -e 'smtpd_sasl_type = dovecot'
 	sudo postconf -e 'smtpd_sasl_path = private/auth'
 	sudo postconf -e 'smtpd_sasl_local_domain ='
@@ -183,6 +201,8 @@ think).
 	sudo postconf -e 'smtpd_recipient_restrictions = permit_sasl_authenticated,permit_mynetworks,reject_unauth_destination'
 	sudo postconf -e 'home_mailbox = Maildir/'
 	sudo postconf -e 'mydomain = p27.eu'
+	sudo postconf -e 'smtpd_helo_required = yes'
+	sudo postconf -e 'smtpd_helo_restrictions = reject_non_fqdn_helo_hostname,reject_invalid_helo_hostname,reject_unknown_helo_hostname'
 
     # Use TLS for both incoming and outgoing mail.
 	sudo postconf -e 'smtp_tls_security_level = may'
@@ -195,15 +215,15 @@ think).
 	sudo postconf -e 'virtual_alias_domains = p27.eu'
 	sudo postconf -e 'virtual_alias_maps = hash:/etc/postfix/virtual'
 
-Now I edit /etc/dovecot/conf.d/10-ssl.conf and change
-
-    ssl = yes
-	ssl_cert = /etc/dovecot/dovecot.pem
-	ssl_key = /etc/dovecot/private/dovecot.pem
-
 I might want to spot check this file:
 
     sudo cp postfix/main.cf /etc/postfix/main.cf
+
+Now I configure dovecot.  If there's doubt, diff first (or copy
+existing files to .bak).
+
+    sudo cp dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+	sudo cp dovecot/conf.d/*.conf /etc/dovecot/conf.d/
 
 I'll need to open port 25 (smtp) and 993 (imap over SSL).  In
 addition, incoming smtp connections, after knocking at port 25, will
@@ -219,11 +239,51 @@ pop3), 143 (unsecured imap), or 995 (pop3 over SSL, because I'm not
 using pop).  For now, I'm simply denying access to those ports (via
 ufw's default policy).
 
-And, finally, set up email aliases to map to users.
+A couple debugging things about sockets.  I can check who's listening
+on what socket (and then grep to restrict):
+
+    sudo lsof -iTCP -sTCP:LISTEN | grep dovecot
+
+I can also get socket information for a given pid thus:
+
+    sudo ss -l -p -n | grep 19715
+
+And, finally, set up email aliases to map to users.  Note that I'm
+assuming that local delivery means to an existing user with a unix
+account.
+Cf. srd p27-postfix-aliases
+Cf. http://www.postfix.org/VIRTUAL_README.html
 
     sudo emacs /etc/postfix/virtual
 
-cf. srd p27-postfix-aliases
+Now tell postfix to update its database:
+
+    sudo postmap /etc/postfix/virtual
+	sudo service postfix reload
+
+I can test imaps connection thus:
+
+    openssl s_client -connect mail.p27.eu:imaps
+
+I can test smtp connections thus:
+
+	nc mail.example.com 25
+	EHLO $hostname
+	MAIL FROM:<root@example.com>
+	RCPT TO:<jeff@p27.eu>
+	DATA
+	Subject: Test email
+
+	Body of the email
+	.
+	QUIT
+
+To verify certificates, something like this is handy:
+
+    openssl s_client -connect mail.p27.eu:465 -verify_hostname mail.p27.eu \
+	  < /dev/null 2>&1
+    openssl s_client -connect mail.p27.eu:993 -verify_hostname mail.p27.eu \
+	  < /dev/null 2>&1
 
 At this point, I should check my configuration from the outside at all
 of these sites:
@@ -232,10 +292,28 @@ of these sites:
 	https://ssl-tools.net/mailservers .
 	http://www.checktls.com/perl/TestReceiver.pl
 
-Tell postfix to update its database:
 
-    sudo postmap /etc/postfix/virtual
-	sudo service postfix restart
+### Mail clients
+
+When I set up thunderbird, I specified
+
+  imap:
+    server name: mail.p27.eu
+	user: jeff
+	connection: SSL/TLS
+	auth: encrypted
+
+  smtp:
+    server name: mail.p27.eu
+	port: 465
+	connection: SSL/TLS
+	auth: normal
+	user: jeff
+	
+In both cases, I provided my unix password.
+
+I'm not sure why encrypted auth fails on smtp, but since it goes over
+TLS, I think all is ok.
 
 
 ### anti-spam
@@ -263,3 +341,6 @@ Tell postfix to update its database:
 ## letsencrypt
 
 
+# To Do
+
+* The SPF client test at http://www.emailsecuritygrader.com/ fails.

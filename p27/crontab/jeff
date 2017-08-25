@@ -20,5 +20,5 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-47 * * * *  cd /home/jeff/src/jma/p27 && /usr/bin/git pull --ff-only
-48 * * * *  cd /home/jeff/src/jma/isoldpurple && /usr/bin/git pull --ff-only
+47 * * * *  cd /home/jeff/src/jma/p27 && /usr/bin/git pull --ff-only --quiet
+48 * * * *  cd /home/jeff/src/jma/isoldpurple && /usr/bin/git pull --ff-only --quiet
