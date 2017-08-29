@@ -60,6 +60,7 @@ smtpd_tls_exclude_ciphers = RC4, aNULL
 smtp_tls_exclude_ciphers = RC4, aNULL
 smtpd_tls_auth_only = yes
 tls_random_source = dev:/dev/urandom
+# Use TLS for both incoming and outgoing mail.
 smtp_tls_security_level = may
 smtpd_tls_security_level = may
 smtp_tls_note_starttls_offer = yes
