@@ -6,94 +6,78 @@ I am using a host with 1 GB of RAM.  I maybe could have gotten by with
 a cheaper host that has only 512 MB of RAM.  In that case, I probably
 would have added additional swap.
 
-    # With DigitalOcean, I start out with only root.  So create
-    # myself, then logout and log back in as me.  For password,
-    # cf. srd nantes.p27.eu
-    adduser jeff
-    addgroup jeff sudo
+The first thing to do is to follow the instructions in
+[common](common.md) for basic user setup, ufw firewall setup, and ssh
+hardening.
 
-    # For the rest of this, I will assume I am me and so need to sudo.
-    sudo su - jeff
-
-    sudo apt-get -y update
-    sudo apt-get -y upgrade
-    sudo apt-get -y install git emacs-nox letsencrypt ufw
-
-    # Set my timezone.  For a production server I would normally set
-    # to UTC.  But here I think I'd like to see mail headers in my
-    # home timezone.  So I set to Europe/Paris.
-    sudo dpkg-reconfigure tzdata
-
-    # I want en_GB.utf8 and fr_FR.utf8 added to the host.
-    sudo dpkg-reconfigure locales
-
-    mkdir /home/jeff/.ssh
-    chmod 700 $HOME/.ssh
-
-    mkdir -p src/jma
-    cd src/jma
-    git clone https://github.com/JeffAbrahamson/dotfiles.git
-    (cd dotfiles && ./install.sh)
-    git clone https://github.com/JeffAbrahamson/hosts.git
-    cd hosts/p27
-    # In the rest of this, I will assume that cwd=hosts/p27.
+Note that for the rest of this document, I'll assume that
+cwd=hosts/p27.
 
 
 ## firewall
 
-The dotfile install installed a rudimentary firewall.  As of the time
-I'm writing this, I think that should be this:
+I think this is the ufw firewall configuration I want to see:
+
+	22/tcp                     ALLOW       Anywhere
+	22                         LIMIT       Anywhere
+	80/tcp                     ALLOW       Anywhere
+	443/tcp                    ALLOW       Anywhere
+	25/tcp                     ALLOW       Anywhere
+	993/tcp                    ALLOW       Anywhere
+	465/tcp                    ALLOW       Anywhere
+	587/tcp                    ALLOW       Anywhere
+	22/tcp (v6)                ALLOW       Anywhere (v6)
+	22 (v6)                    LIMIT       Anywhere (v6)
+	80/tcp (v6)                ALLOW       Anywhere (v6)
+	443/tcp (v6)               ALLOW       Anywhere (v6)
+	25/tcp (v6)                ALLOW       Anywhere (v6)
+	993/tcp (v6)               ALLOW       Anywhere (v6)
+	465/tcp (v6)               ALLOW       Anywhere (v6)
+	587/tcp (v6)               ALLOW       Anywhere (v6)
+
+Port notes:
+* 22 = ssh
+* 25 = smtp
+* 80 = http
+* 443 = https
+* 465 = URL Rendesvous Directory for SSM
+* 587 = submission (SMTP TLS start)
+* 993 = imaps
+
+The setup commands are thus these:
 
     sudo ufw default allow outgoing
     sudo ufw default deny incoming
     sudo ufw allow ssh/tcp
     sudo ufw limit ssh
+
+	sudo ufw allow http/tcp
+	sudo ufw limit http
+	sudo ufw allow https/tcp
+	sudo ufw limit https
+
+	sudo ufw allow 25/tcp
+	sudo ufw allow 465/tcp
+	sudo ufw allow 587/tcp
+	sudo ufw allow 993/tcp
+
     sudo ufw enable
+
     sudo ufw status verbose
 
 
-## ssh
-
-Make sure sshd is secure.
-
-    # On my workstation.
-    rsync .ssh/id_rsa.pub www.p27.eu:.ssh/authorized_keys
-    # I'll also want to append the public key from any other hosts I use.
-
-    # Probably I want my sshd_config, but double-check that the
-    # distribution isn't offering anything new.
-    #
-    # Don't do this on vagrant where I needn't set up ssh certificates.
-    diff sshd/sshd_config /etc/ssh/sshd_config
-    sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-    sudo cp sshd/sshd_config /etc/ssh/sshd_config
-    sudo service sshd restart
-    ## And now from another window confirm that ssh access still works. ####
-
-    sudo apt-get install -y fail2ban
-
 ## nginx
 
-Install nginx:
+Set up nginx as described [here](nginx.md).
 
-    sudo apt-get install -y nginx-full nginx-doc
-    sudo cp nginx/nginx.conf /etc/nginx/nginx.conf
-    sudo cp nginx/sites-available/* /etc/nginx/sites-available/
+### Local set configuration
 
-    (cd /etc/nginx/sites-enabled && sudo rm default)
+The local site configurations, noted in [nginx.md](nginx.md) are these
+
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/01-www)
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/05-isoldpurple)
 
-    sudo ufw allow http/tcp
-    sudo ufw allow https/tcp
-
-We want to serve https only.  The nginx site configs will promote http
-to https.
-
-    sudo apt-get install -y letsencrypt
-    sudo add-apt-repository ppa:certbot/certbot
-    sudo apt-get -y update
-    sudo apt-get -y install python-certbot-nginx
+### Local certbot configuration
 
     # In the following, I might need to manually edit files on the
     # server to remove the reference to the certs that don't exist
@@ -103,14 +87,7 @@ to https.
     # Certbot config is saved in /etc/letsencrypt/
     sudo certbot --agree-tos -m jeff@p27.eu --nginx -d isoldpurple.com -d www.isoldpurple.com
 
-    # And keep the certificates updated by putting this in root
-    # crontab (the time is arbitrary).  Note, however, that the full
-    # root crontab can just be pulled from crontab/root.
-    17 5 * * *   /usr/bin/certbot renew --quiet
-
-    # Don't allow weak Diffie-Hellman keys.
-    openssl dhparam -out dhparams.pem 2048 && sudo mv dhparams /etc/ssl/certs/
-    sudo service nginx reload
+### Actually serve some content
 
     # Populate my web sites.
     (cd ~/src/jma && git clone https://github.com/JeffAbrahamson/p27.git)
@@ -133,9 +110,17 @@ to https.
     # and root's crontab to add these lines:
     57 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/p27/site/ /var/www/p27/
     58 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/isoldpurple/site/ /var/www/isoldpurple/
-    
+
 
 ## mail
+
+### SPF record
+
+Make sure I have a valid spf record for my mail-sending host.
+Cf. [this DO write-up](https://www.digitalocean.com/community/tutorials/how-to-use-an-spf-record-to-prevent-spoofing-improve-e-mail-reliability).
+I think the following DNS TXT record is correct for me:
+
+    "v=spf1 mx ~all"
 
 ### postfix and dovecot
 

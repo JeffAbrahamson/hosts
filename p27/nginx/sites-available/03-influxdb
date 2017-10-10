@@ -1,8 +1,8 @@
 server {
   listen              443 ssl;
   server_name         influxdb.p27.eu;
-  ssl_certificate     /etc/ssl/localcerts/p27.eu.bundled.crt;
-  ssl_certificate_key /etc/ssl/localcerts/p27.eu.key;
+  ssl_certificate     /etc/letsencrypt/live/influxdb.p27.eu/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/influxdb.p27.eu/privkey.pem; # managed by Certbot
   ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
   ssl_ciphers         HIGH:!aNULL:!MD5;
 
@@ -19,5 +19,5 @@ server {
 server {
   listen 80;
   server_name influxdb.p27.eu;
-  return 301 https://$host$request_uri/;
+  return 301 https://$host$request_uri;
 }

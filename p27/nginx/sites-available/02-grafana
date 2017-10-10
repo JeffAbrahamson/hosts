@@ -1,14 +1,14 @@
 server {
   listen              443 ssl;
   server_name         monitor.p27.eu
-  ssl_certificate     /etc/ssl/localcerts/p27.eu.bundled.crt;
-  ssl_certificate_key /etc/ssl/localcerts/p27.eu.key;
+  ssl_certificate     /etc/letsencrypt/live/monitor.p27.eu/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/monitor.p27.eu/privkey.pem; # managed by Certbot
   ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
   ssl_ciphers         HIGH:!aNULL:!MD5;
 
   ssl_session_timeout 10m;
 
-  error_log /tmp/nginx.log debug;
+  # error_log /tmp/nginx.log debug;
   rewrite_log on;
 
   location / {
@@ -19,6 +19,6 @@ server {
 
 server {
   listen 80;
-  server_name monitor.p27.eu
-  return 301 https://$host$request_uri/;
+  server_name monitor.p27.eu;
+  return 301 https://$host$request_uri;
 }

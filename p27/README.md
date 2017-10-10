@@ -55,3 +55,8 @@ problems.
 ## To Do
 
 * The SPF client test at http://www.emailsecuritygrader.com/ fails.
+* fail2ban configuration (and telegraf support) for postfix, nginx, sshd
+* [unattended-upgrades](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
+* logwatch?
+* [rootkit detection](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
+* tripwire?
