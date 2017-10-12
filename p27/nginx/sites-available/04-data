@@ -1,0 +1,39 @@
+server {
+  listen              443 ssl;
+  server_name         data.p27.eu;
+  ssl_certificate     /etc/letsencrypt/live/data.p27.eu/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/data.p27.eu/privkey.pem; # managed by Certbot
+  ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers         HIGH:!aNULL:!MD5;
+
+  ssl_session_timeout 10m;
+
+  # error_log /tmp/nginx.log debug;
+  rewrite_log on;
+  root /var/www/piwik;
+
+  location /p/ {
+      # First attempt to serve request as file, then
+      # as directory, then fall back to displaying a 404.
+      index index.php;
+      try_files $uri $uri/ =404;
+  }
+
+  # We have two optiosn: pass PHP scripts to FastCGI server listening
+  # on 127.0.0.1:9000 or pass to the same on unix domain socket.
+  location ~ /p/.*\.php$ {
+      include snippets/fastcgi-php.conf;
+
+      # # With php7.0-cgi alone:
+      # fastcgi_pass 127.0.0.1:9000;
+
+      # With php7.0-fpm:
+      fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+   }
+}
+
+server {
+  listen 80;
+  server_name data.p27.eu;
+  return 301 https://$host$request_uri;
+}

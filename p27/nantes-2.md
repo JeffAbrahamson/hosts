@@ -18,9 +18,9 @@ cwd=hosts/p27.
 
 I think this is the ufw firewall configuration I want to see:
 
-	22/tcp                     ALLOW       Anywhere
-	22                         LIMIT       Anywhere
-	[...]    #### Complete this <<====
+    22/tcp                     ALLOW       Anywhere
+    22                         LIMIT       Anywhere
+    [...]    #### Complete this <<====
 
 Port notes:
 * 22 = ssh
@@ -34,10 +34,10 @@ The setup commands are thus these:
     sudo ufw allow ssh/tcp
     sudo ufw limit ssh
 
-	sudo ufw allow http/tcp
-	sudo ufw limit http
-	sudo ufw allow https/tcp
-	sudo ufw limit https
+    sudo ufw allow http/tcp
+    sudo ufw limit http
+    sudo ufw allow https/tcp
+    sudo ufw limit https
 
     sudo ufw enable
 
@@ -68,6 +68,102 @@ The local site configurations, noted in [nginx.md](nginx.md) are these
     sudo certbot --agree-tos -m jeff@p27.eu --nginx -d monitor.p27.eu
 
 
+## piwik
+
+I'm following the (currently overly manual) piwik installation
+instructions [here](https://piwik.org/docs/installation/).
+
+### MariaDB
+
+Piwik really wants to use MySQL/MariaDB, even if its developer team
+[really wants](https://piwik.org/faq/how-to-install/faq_55/) to use
+more than that.
+
+    $ sudo apt-get install -y mariadb-common mariadb-server mariadb-client
+
+Now set up mariadb and harden it.  The db and user/password names here
+are arbitrary (srd):
+
+    $ sudo mysql_secure_installation
+
+    $ sudo mysql
+    MariaDB [(none)]> CREATE DATABASE my-piwik-db-name;
+    MariaDB [(none)]> CREATE USER 'my-piwik-username'@'localhost' IDENTIFIED BY 'my-strong-password-here';
+    MariaDB [(none)]> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON my-piwik-db-name.* TO 'my-piwik-username'@'localhost';
+
+I can now log in as piwi thus:
+
+    $ mysql -u my-piwik-username -p
+
+and as root thus:
+
+    $ sudo mysql
+
+
+### PHP
+
+Piwik is PHP-based.
+
+    $ sudo apt-get install -y php7.0 php7.0-gd php7.0-cli \
+                              php7.0-mbstring php7.0-mysql php-xml
+
+### Piwik
+
+That page tells me to download a zip (!) file containing piwik from
+[here](https://builds.piwik.org/piwik.zip).
+
+    $ sudo apt-get install -y unzip w3m
+    $ wget https://builds.piwik.org/piwik.zip
+    $ (cd /var/www && sudo su unzip /home/jeff/piwik.zip)
+
+This file redirects to the installation page.  Aside from verifying
+that we can find that page, we don't really need the file sitting in
+/var/www/.
+
+    $ sudo rm /var/www/How\ to\ install\ Piwik.html
+
+Now I visit https://data.p27.eu/p/ to begin setup.
+
+These two fields are pre-filled correctly:
+
+    database server: 127.0.0.1
+    table prefix:    piwik_
+    adapter:         PDO\MYSQL
+
+These I should fill in (based on srd values):
+
+    login
+    pass
+    db name
+    table_prefix
+
+Then I create a piwik superuser (srd).
+
+Then I tell it my website(s).  Piwik will tell me the code to put on
+my site.
+
+### Install GeoLite2-City database
+
+It's in github:
+
+    # (cd ~/src/ && git clone https://github.com/maxmind/geoipupdate.git)
+
+but there's also an ubuntu PPA:
+
+    $ sudo add-apt-repository ppa:maxmind/ppa
+	$ sudo apt-get update
+	$ sudo apt-get install -y geoipupdate
+
+	$ cd /var/www/piwik/p/misc
+	$ for f in /usr/share/GeoIP/*; do sudo ln -s $f; done
+
+Then in a browser go to piwik -> (left menu) system -> geolocation and
+choose "GeoIP (Php)" and click save.
+
+Strangely, this causes piwik's system check to report foreign files.
+I'm going to ignore that.
+
+
 ## postgresql
 
 ## influxdb
@@ -92,5 +188,3 @@ inputs.
 
 
 ## grafana
-
-## letsencrypt
