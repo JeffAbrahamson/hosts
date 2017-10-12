@@ -46,15 +46,29 @@ One host, which I call nantes-1, handles the services I care about
 most: mail and web services, mostly.  I monitor those services from
 another host, nantes-2, on the theory that if something goes awry on
 nantes-1, I'd like to find out about it from a host that is not having
-problems.
+problems.  In addition, I've put those two hosts in different data
+centres so that monitoring won't say all is great if a DC falls off
+the net (a highly unlikely event, but routers sometimes become flaky).
 
 * [nantes-1: mail and web setup](nantes-1.md)
 * [nantes-2: monitoring and analytics](nantes-2.md)
 
 
+## Periodic testing
+
+Periodically, I should test that all is well, that I'm not on black
+hole lists, etc.  Here are some resources:
+
+* http://www.emailsecuritygrader.com/ 
+* https://ssl-tools.net/mailservers .
+* http://www.checktls.com/perl/TestReceiver.pl
+
+This would be nice to automate.
+
+
 ## To Do
 
-* The SPF client test at http://www.emailsecuritygrader.com/ fails.
+* spam protection
 * fail2ban configuration (and telegraf support) for postfix, nginx, sshd
 * [unattended-upgrades](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
 * logwatch?

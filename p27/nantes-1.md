@@ -269,10 +269,6 @@ superfluous.
 
 #### ClamAV ?
 
-#### SPF
-
-The SPF client test at http://www.emailsecuritygrader.com/ fails.
-
 ### anti-virus
 
 
@@ -281,5 +277,3 @@ The SPF client test at http://www.emailsecuritygrader.com/ fails.
 
 ### DKIM
 
-
-### SPF records

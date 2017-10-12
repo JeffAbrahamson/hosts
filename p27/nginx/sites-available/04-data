@@ -10,26 +10,26 @@ server {
 
   # error_log /tmp/nginx.log debug;
   rewrite_log on;
-  root /var/www/piwik;
+  root /var/www/;
 
   location /p/ {
+      alias /var/www/piwik/;
+      index index.php;
+
       # First attempt to serve request as file, then
       # as directory, then fall back to displaying a 404.
-      index index.php;
       try_files $uri $uri/ =404;
+
+      # Pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+      location ~ \.php$ {
+          include snippets/fastcgi-php.conf;
+
+          # With php7.0-fpm:
+          fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+          fastcgi_param SCRIPT_FILENAME $request_filename;
+      }
   }
 
-  # We have two optiosn: pass PHP scripts to FastCGI server listening
-  # on 127.0.0.1:9000 or pass to the same on unix domain socket.
-  location ~ /p/.*\.php$ {
-      include snippets/fastcgi-php.conf;
-
-      # # With php7.0-cgi alone:
-      # fastcgi_pass 127.0.0.1:9000;
-
-      # With php7.0-fpm:
-      fastcgi_pass unix:/run/php/php7.0-fpm.sock;
-   }
 }
 
 server {
