@@ -173,9 +173,15 @@ On hold...
 
 ### influxdb server
 
+[This tutorial](http://www.andremiller.net/content/grafana-and-influxdb-quickstart-on-ubuntu)
+is quite useful.  The following is largely based on it.
+
 	$ curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 	$ source /etc/lsb-release
 	$ echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+	
+	$ sudo apt-get update && sudo apt-get install -y influxdb
+	$ sudo service influxdb start
 
 
 ### telegraf client
