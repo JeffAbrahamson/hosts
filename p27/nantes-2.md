@@ -206,7 +206,8 @@ moment, even if the database telegraf already exists.
 
 Now copy my config into place:
 
-    suco cp influxdb/influxdb.conf /etc/influxdb/influxdb.conf
+    $ sudo cp influxdb/influxdb.conf /etc/influxdb/influxdb.conf
+	$ sudo service influxdb restart
 
 This enables user auth, enables https, and points to the right
 certificates.  (Note that my hostname is in that file: search for
@@ -251,7 +252,14 @@ processes: the port should remain blocked by ufw.
 Hosts that run additional services may (should) uncomment additional
 inputs.
 
+The copy line, below, avoids copying and manually editing the password
+(for me).  If you're not me, you'll have edit the host name as well.
+
     $ sudo apt-get install telegraf
+	$ cat telegraf/telegraf.conf | \
+	  sed -e 's/================username================/influx-user/;' \
+	  sed -e 's/================password================/influx-pass/;' \
+	  sudo tee /etc/telegraf/telegraf.conf >/dev/null
 
 
 ### grafana
