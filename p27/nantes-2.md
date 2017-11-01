@@ -209,9 +209,9 @@ Now copy my config into place:
     $ sudo cp influxdb/influxdb.conf /etc/influxdb/influxdb.conf
 	$ sudo service influxdb restart
 
-This enables user auth, enables https, and points to the right
-certificates.  (Note that my hostname is in that file: search for
-p27 if you're not me.)
+This enables user auth.  Note also:
+* My hostname is in that file: search for p27 if you're not me.
+* It does not enable https, because nginx handles SSL termination and proxies to influxdb, which only listens to http on localhost.
 
 I can now do a simple test:
 
@@ -257,9 +257,59 @@ The copy line, below, avoids copying and manually editing the password
 
     $ sudo apt-get install telegraf
 	$ cat telegraf/telegraf.conf | \
-	  sed -e 's/================username================/influx-user/;' \
-	  sed -e 's/================password================/influx-pass/;' \
+	  sed -e 's/================username================/influx-user/;' | \
+	  sed -e 's|================password================|influx-pass|;' | \
 	  sudo tee /etc/telegraf/telegraf.conf >/dev/null
+    $ sudo chown telegraf:telegraf /etc/telegraf/telegraf.conf
+	$ sudo chmod 600 /etc/telegraf/telegraf.conf
+	$ ls -l /etc/telegraf/telegraf.conf
+	-rw------- 1 telegraf telegraf 74246 Nov  1 10:14 /etc/telegraf/telegraf.conf
+	$
+
+Since telegraf.conf has my influx password in it, I'd rather it not be
+world readable.  On my system, telegraf runs as user telegraf.
+
+Now I can do a quick test:
+
+	$ influx
+	Connected to http://localhost:8086 version 1.3.7
+	InfluxDB shell version: 1.3.7
+	> auth
+	username: jeff
+	password:
+	> use telegraf
+	Using database telegraf
+	> show measurements
+	name: measurements
+	name
+	----
+	cpu
+	disk
+	diskio
+	internal_agent
+	internal_gather
+	internal_memstats
+	internal_write
+	kernel
+	mem
+	processes
+	swap
+	system
+	> select * from cpu limit 3
+	...
+	> show tag keys from cpu
+	name: cpu
+	tagKey
+	------
+	cpu
+	host
+	>
+	show tag values from cpu with key = "host"
+	name: cpu
+	key  value
+	---  -----
+	host nantes-2
+	>
 
 
 ### grafana
