@@ -169,7 +169,7 @@ I'm going to ignore that.
 On hold...
 
 
-## influxdb
+## Monitoring (TICK stack with s/chronograf/grafana/)
 
 ### influxdb server
 
@@ -182,6 +182,57 @@ is quite useful.  The following is largely based on it.
 	
 	$ sudo apt-get update && sudo apt-get install -y influxdb
 	$ sudo service influxdb start
+
+I can check that it's running with `systemctl status`:
+
+	$ systemctl status influxdb
+
+Now I create a user for myself (srd: p27-influxdb).  Note that
+telegraf would cause the telegraf database to be created anyway.  I
+also create a test database for occasional testing.
+
+    $ influx
+	CREATE DATABASE telegraf
+	CREATE DATABASE test
+	USE telegraf
+    CREATE USER "name" WITH PASSWORD 'secret' WITH ALL PRIVILEGES
+	CREATE USER "telegraf-name" WITH PASSWORD 'secret' WITH ALL PRIVILEGES
+	SHOW USERS
+	exit
+
+I don't think it's right that the telegraf user should have full
+privileges, but it seems to need quite a lot if not all for the
+moment, even if the database telegraf already exists.
+
+Now copy my config into place:
+
+    suco cp influxdb/influxdb.conf /etc/influxdb/influxdb.conf
+
+This enables user auth, enables https, and points to the right
+certificates.  (Note that my hostname is in that file: search for
+p27 if you're not me.)
+
+I can now do a simple test:
+
+    $ influx
+	auth
+	username: jeff
+	password: ...
+	Using database test
+	> INSERT foo,host=serverA value=0.64
+	> select * from foo
+	name: foo
+	time                host    value
+	----                ----    -----
+	1509526499624590841 serverA 0.64
+	> show measurements
+	name: measurements
+	name
+	----
+	foo
+	> drop series from "foo"
+	> show measurements
+	>
 
 
 ### telegraf client
@@ -200,5 +251,20 @@ processes: the port should remain blocked by ufw.
 Hosts that run additional services may (should) uncomment additional
 inputs.
 
+    $ sudo apt-get install telegraf
 
-## grafana
+
+### grafana
+
+The "C" in TICK is chronograf.  For historical reasons I've used
+grafana.  I can't justify that decision beyond history.  Maybe
+chronograf is better now.
+
+
+### postfix
+
+In order to receive alerts, I have to send mail.  So I set up an
+outgoing-only postfix server.  It just uses my own mail host for mail.
+
+### kapacitor
+
