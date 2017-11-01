@@ -326,7 +326,7 @@ chronograf is better now.
 	  sudo tee /etc/apt/sources.list.d/grafana.list
     $ curl https://packagecloud.io/gpg.key | sudo apt-key add -
 	$ sudo apt-get update
-	$ sudo apt-get install -y grafana
+	$ sudo apt-get install -y grafana sqlite3
 	$ sudo service grafana-server stop
 
 I don't want grafana to run until I set up my config file, since it
@@ -345,15 +345,43 @@ grafana.
 
 Set up passwords (srd p27-grafana):
 
-    $ cat grafana/grafana.ini 
+    $ cat grafana/grafana.ini | \
 	  sed -e 's|================ admin_passwd ================|grafana-admin-passwd|;' | \
 	  sed -e 's|================ secret_key ================|grafana-secret-key|;' | \
 	  sudo tee /etc/grafana/grafana.ini >/dev/null
-    $ sudo chown root root /etc/grafana/grafana.ini
-	$ sudo chmod 640 /etc/grafana/grafana.init
+    $ sudo chown root:grafana /etc/grafana/grafana.ini
+	$ sudo chmod 640 /etc/grafana/grafana.ini
 	$ ls -l /etc/grafana/grafana.ini
     -rw-r----- 1 root grafana 13099 Nov  1 10:48 grafana.ini
 	$ sudo service grafana-server start
+
+I can (if I so desire) check the mysql table thus:
+
+    $ sudo sqlite3 /var/lib/grafana/grafana.db
+	SQLite version 3.11.0 2016-02-15 17:29:24
+	Enter ".help" for usage hints.
+	sqlite> select * from user;
+	Error: no such table: user
+	sqlite>
+	$
+
+To configure grafana, go to the swirl menu (upper left) and choose
+"Data Sources", then click "Add Data Source".
+
+    name: influxdb-telegraf  (check: default)
+	type: influxdb
+
+	url: http://localhost:8086
+	access: proxy
+
+	http auth: nothing checked
+
+	InfluxDB Details:
+      database: telegraf
+	  user: (my influx telegraf user)
+	  pass: (my influx telegraf password)
+
+Then save and test.
 
 
 ### postfix
@@ -361,5 +389,7 @@ Set up passwords (srd p27-grafana):
 In order to receive alerts, I have to send mail.  So I set up an
 outgoing-only postfix server.  It just uses my own mail host for mail.
 
-### kapacitor
+### kapacitor or siren
+
+For alerts
 

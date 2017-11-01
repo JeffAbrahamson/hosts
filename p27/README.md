@@ -74,3 +74,4 @@ This would be nice to automate.
 * logwatch?
 * [rootkit detection](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
 * tripwire?
+* kapacitor or siren (nantes-2)
