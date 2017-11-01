@@ -311,12 +311,49 @@ Now I can do a quick test:
 	host nantes-2
 	>
 
+Note that I will want to install telegraf on all of my other hosts:
+nantes-1, but also my home desktop, my laptop, my file server.
+Cf. [telegraf.md](../telegraf.md).
+
 
 ### grafana
 
 The "C" in TICK is chronograf.  For historical reasons I've used
 grafana.  I can't justify that decision beyond history.  Maybe
 chronograf is better now.
+
+    $ echo "deb https://packagecloud.io/grafana/stable/debian/ jessie main" | \
+	  sudo tee /etc/apt/sources.list.d/grafana.list
+    $ curl https://packagecloud.io/gpg.key | sudo apt-key add -
+	$ sudo apt-get update
+	$ sudo apt-get install -y grafana
+	$ sudo service grafana-server stop
+
+I don't want grafana to run until I set up my config file, since it
+authenticates at admin/admin out of the box.
+
+Note that wheezy is debian 7, jessie is debian 8, and stretch is
+debian 9.  On the day I'm writing this, the
+[grafana docs](http://docs.grafana.org/installation/debian/) say to
+use jessie.
+Cf. [this issue](https://github.com/grafana/grafana/issues/8737) and
+[this one](https://github.com/grafana/grafana/issues/8648).
+
+Grafana listens on port 3000.  I've configured nginx (cf. 02-grafana)
+to proxy to 3000.  So (for me), monitor.p27.eu should point to
+grafana.
+
+Set up passwords (srd p27-grafana):
+
+    $ cat grafana/grafana.ini 
+	  sed -e 's|================ admin_passwd ================|grafana-admin-passwd|;' | \
+	  sed -e 's|================ secret_key ================|grafana-secret-key|;' | \
+	  sudo tee /etc/grafana/grafana.ini >/dev/null
+    $ sudo chown root root /etc/grafana/grafana.ini
+	$ sudo chmod 640 /etc/grafana/grafana.init
+	$ ls -l /etc/grafana/grafana.ini
+    -rw-r----- 1 root grafana 13099 Nov  1 10:48 grafana.ini
+	$ sudo service grafana-server start
 
 
 ### postfix
