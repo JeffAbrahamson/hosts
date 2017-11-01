@@ -164,6 +164,13 @@ existing files to .bak).
     sudo cp dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     sudo cp dovecot/conf.d/*.conf /etc/dovecot/conf.d/
 
+I upped the imap mail_max_userip_connections from 10 to 20 because,
+with a desktop, a laptop, two tablets, and a phone all trying to check
+mail, I was getting connections refused from dovecot (which aren't
+reported intelligently to the client, the tcp connection just drops,
+but it's clear in `/var/log/mail.log`).  At least I now know that
+dovecot's anti DOS protection works.
+
 I'll need to open port 25 (smtp) and 993 (imap over SSL).  In
 addition, incoming smtp connections, after knocking at port 25, will
 need to use port 465 (SMTP over SSL) and/or 587 (SMTP AUTH, I think).
