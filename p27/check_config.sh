@@ -86,7 +86,7 @@ if [ "$HOSTNAME" = nantes-2 ]; then
     diff_file /etc/influxdb/influxdb.conf influxdb/influxdb.conf
 fi
 
-diff_file /etc/nginx/nginx.conf nginx/nginx.confg
+diff_file /etc/nginx/nginx.conf nginx/nginx.conf
 diff_dir /etc/nginx/sites-available/ nginx/sites-available/
 
 diff_file /etc/ssh/sshd_config ssh/sshd_config
