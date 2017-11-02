@@ -63,11 +63,6 @@ diff_cron() {
 }
 
 # Make sure the golden directory exists and has the right permissions.
-golden_dir=golden
-if [ ! -d $golden_dir ]; then
-    mkdir $golden_dir
-fi
-chmod 700 $golden_dir		# This could reveal pass phrases.
 
 diff_cron crontab/jeff jeff
 diff_cron crontab/root root
@@ -83,14 +78,14 @@ if [ "$HOSTNAME" = nantes-2 ]; then
     diff_file /etc/influxdb/influxdb.conf influxdb/influxdb.conf
 fi
 
-diff_file /etc/nginx/nginx.confg nginx/nginx.confg
+diff_file /etc/nginx/nginx.conf nginx/nginx.confg
 diff_dir /etc/nginx/sites-available/ nginx/sites-available/
 
 diff_file /etc/ssh/sshd_config ssh/sshd_config
 if [ "$HOSTNAME" = nantes-1 ]; then
-    diff_file /etc/telegraf/telegraf.conf.nantes-1
+    diff_file /etc/telegraf/telegraf.conf telegraf/telegraf.conf.nantes-1
 elif [ "$HOSTNAME" = nantes-2 ]; then
-    diff_file /etc/telegraf/telegraf.conf.nantes-2
+    diff_file /etc/telegraf/telegraf.conf telegraf/telegraf.conf.nantes-2
 else
     echo "Telegraf:  Unknown host, no diff available."
 fi
