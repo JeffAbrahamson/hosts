@@ -12,6 +12,13 @@ server {
   location / {
   }
 
+  location /nginx_status {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
+
   ssl_certificate /etc/letsencrypt/live/p27.eu/fullchain.pem;   # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/p27.eu/privkey.pem; # managed by Certbot
 

@@ -1,0 +1,63 @@
+# This file is based on https://wiki2.dovecot.org/Statistics
+
+# Dovecot v2.1+ supports gathering statistics (CPU, disk usage, etc.)
+# from mail processes (IMAP, POP3, LMTP, etc.) to the stats
+# process. The stats process can later be queried what's going on in
+# the system. With imap_stats plugin you can get per-command level
+# statistics for IMAP commands.
+#
+# There are different "zoom levels" you can look at the statistics:
+#
+# * command: Per-IMAP command
+# * session: Per IMAP/POP3 connection
+# * user: Per user (all of user's sessions summed up)
+# * domain: Per domain (all of domain's users summed up)
+# * ip: Per IP address (all sessions from the IP summed up)
+# * global: Everything summed up (2.2.16+)
+
+mail_plugins = $mail_plugins stats
+protocol imap {
+  mail_plugins = $mail_plugins imap_stats
+}
+plugin {
+  # how often to session statistics (must be set)
+  stats_refresh = 30 secs
+  # track per-IMAP command statistics (optional)
+  stats_track_cmds = yes
+}
+
+# You'll also need to give enough permissions for mail processes to be
+# able to write to stats-mail fifo. For example if you use a single
+# "vmail" user for mail access:
+service stats {
+  fifo_listener stats-mail {
+    user = vmail
+    mode = 0600
+  }
+}
+
+
+# Memory usage configuration
+
+# The stats process attempts to keep memory usage below a specified
+# amount. This value is only approximate because of extra overhead
+# caused by malloc() itself.
+
+stats_memory_limit = 16 M
+
+# Once the memory limit is reached, oldest statistics are freed from
+# memory. Different statistics levels have different timeout limits,
+# which are configured in:
+
+stats_command_min_time = 1 mins
+stats_domain_min_time = 12 hours
+stats_ip_min_time = 12 hours
+stats_session_min_time = 15 mins
+stats_user_min_time = 1 hours
+
+service stats {
+  inet_listener {
+    address = 127.0.0.1
+    port = 24242
+  }
+}

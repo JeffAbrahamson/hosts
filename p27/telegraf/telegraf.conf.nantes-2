@@ -960,6 +960,17 @@
 #   ## Use SSL but skip chain & host verification
 #   # insecure_skip_verify = false
 
+# HTTP/HTTPS request given an address a method and a timeout
+[[inputs.http_response]]
+  ## Server address (default http://localhost)
+  address = "https://www.p27.eu/index.html"
+  ## Set response_timeout (default 5 seconds)
+  response_timeout = "5s"
+  ## HTTP Request Method
+  method = "GET"
+  ## Whether to follow redirects from the server (defaults to false)
+  follow_redirects = false
+
 
 # # Read flattened metrics from one or more JSON HTTP endpoints
 # [[inputs.httpjson]]
@@ -1004,20 +1015,20 @@
 #   # insecure_skip_verify = false
 
 
-# # Read InfluxDB-formatted JSON metrics from one or more HTTP endpoints
-# [[inputs.influxdb]]
-#   ## Works with InfluxDB debug endpoints out of the box,
-#   ## but other services can use this format too.
-#   ## See the influxdb plugin's README for more details.
-#
-#   ## Multiple URLs from which to read InfluxDB-formatted JSON
-#   ## Default is "http://localhost:8086/debug/vars".
-#   urls = [
-#     "http://localhost:8086/debug/vars"
-#   ]
-#
-#   ## http request & header timeout
-#   timeout = "5s"
+# Read InfluxDB-formatted JSON metrics from one or more HTTP endpoints
+[[inputs.influxdb]]
+  ## Works with InfluxDB debug endpoints out of the box,
+  ## but other services can use this format too.
+  ## See the influxdb plugin's README for more details.
+
+  ## Multiple URLs from which to read InfluxDB-formatted JSON
+  ## Default is "http://localhost:8086/debug/vars".
+  urls = [
+    "http://localhost:8086/debug/vars"
+  ]
+
+  ## http request & header timeout
+  timeout = "5s"
 
 
 # # Collect statistics about itself
@@ -1287,10 +1298,10 @@
 #   # no configuration
 
 
-# # Read Nginx's basic status information (ngx_http_stub_status_module)
-# [[inputs.nginx]]
-#   ## An array of Nginx stub_status URI to gather stats.
-#   urls = ["http://localhost/status"]
+# Read Nginx's basic status information (ngx_http_stub_status_module)
+[[inputs.nginx]]
+  ## An array of Nginx stub_status URI to gather stats.
+  urls = ["http://localhost/nginx_status"]
 
 
 # # Read NSQ topic and channel statistics.
@@ -1354,21 +1365,21 @@
 #   urls = ["http://localhost/status"]
 
 
-# # Ping given url(s) and return statistics
-# [[inputs.ping]]
-#   ## NOTE: this plugin forks the ping command. You may need to set capabilities
-#   ## via setcap cap_net_raw+p /bin/ping
-#   #
-#   ## urls to ping
-#   urls = ["www.google.com"] # required
-#   ## number of pings to send per collection (ping -c <COUNT>)
-#   # count = 1
-#   ## interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
-#   # ping_interval = 1.0
-#   ## per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
-#   # timeout = 1.0
-#   ## interface to send ping from (ping -I <INTERFACE>)
-#   # interface = ""
+# Ping given url(s) and return statistics
+[[inputs.ping]]
+  ## NOTE: this plugin forks the ping command. You may need to set capabilities
+  ## via setcap cap_net_raw+p /bin/ping
+  #
+  ## urls to ping
+  urls = ["www.google.com", "nantes-1.p27.eu"] # required
+  ## number of pings to send per collection (ping -c <COUNT>)
+  count = 1
+  ## interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
+  ping_interval = 10.0
+  ## per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
+  timeout = 1.0
+  ## interface to send ping from (ping -I <INTERFACE>)
+  # interface = ""
 
 
 # # Read metrics from one or many postgresql servers

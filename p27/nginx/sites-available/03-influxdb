@@ -14,6 +14,13 @@ server {
     # Passing on localhost, so no need to encrypt.
     proxy_pass    http://localhost:8086/;
   }
+
+  location /nginx_status {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
 }
 
 server {
