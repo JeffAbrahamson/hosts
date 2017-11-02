@@ -63,9 +63,9 @@ Make sure sshd is secure.
     # distribution isn't offering anything new.
     #
     # Don't do this on vagrant where I needn't set up ssh certificates.
-    diff sshd/sshd_config /etc/ssh/sshd_config
+    diff ssh/sshd_config /etc/ssh/sshd_config
     sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
-    sudo cp sshd/sshd_config /etc/ssh/sshd_config
+    sudo cp ssh/sshd_config /etc/ssh/sshd_config
     sudo service sshd restart
     ## And now from another window confirm that ssh access still works. ####
 
