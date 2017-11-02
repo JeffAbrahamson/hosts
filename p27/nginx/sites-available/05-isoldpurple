@@ -14,20 +14,12 @@ server {
 
   ssl_certificate /etc/letsencrypt/live/isoldpurple.com/fullchain.pem;   # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/isoldpurple.com/privkey.pem; # managed by Certbot
-
-  location /nginx_status {
-    stub_status;
-    access_log off;
-    allow 127.0.0.1;
-    deny all;
-  }
 }
 
 server {
   listen 80;
   server_name www.ISoldPurple.com;
   return 301 https://$host$request_uri/;
-
 }
 
 
@@ -41,4 +33,16 @@ server {
   ssl_certificate /etc/letsencrypt/live/isoldpurple.com/fullchain.pem; # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/isoldpurple.com/privkey.pem; # managed by Certbot
 
+}
+
+server {
+  listen 80;
+  server_name localhost;
+
+  location /nginx_status {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
 }

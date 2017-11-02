@@ -12,13 +12,6 @@ server {
   location / {
   }
 
-  location /nginx_status {
-    stub_status;
-    access_log off;
-    allow 127.0.0.1;
-    deny all;
-  }
-
   ssl_certificate /etc/letsencrypt/live/p27.eu/fullchain.pem;   # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/p27.eu/privkey.pem; # managed by Certbot
 
@@ -53,4 +46,17 @@ server {
   listen 443;
   server_name nantes-1.p27.eu;
   return 301 https://www.p27.eu$request_uri;
+}
+
+server {
+  listen 80;
+  server_name localhost;
+
+  location /nginx_status {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
+
 }
