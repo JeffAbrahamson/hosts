@@ -70,3 +70,10 @@ virtual_alias_maps = hash:/etc/postfix/virtual
 mydomain = p27.eu
 smtpd_helo_required = yes
 smtpd_helo_restrictions = reject_non_fqdn_helo_hostname,reject_invalid_helo_hostname,reject_unknown_helo_hostname
+
+## The default message size limit is 10 MB.  That means two 5 MB
+## photos in a mail will lead to a bounce.  That seems excessively
+## strict these days.  So increase to 20 MB.  Intermediate mail
+## servers might limit this as well, of course.
+# message_size_limit = 10240000
+message_size_limit = 20480000
