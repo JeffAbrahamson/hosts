@@ -383,6 +383,10 @@ To configure grafana, go to the swirl menu (upper left) and choose
 
 Then save and test.
 
+Grafana automatically doesn't start at system start.  This fixes that:
+
+    $ sudo update-rc.d grafana-server defaults
+
 
 ### postfix
 
