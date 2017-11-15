@@ -62,6 +62,7 @@ hole lists, etc.  Here are some resources:
 * http://www.emailsecuritygrader.com/ 
 * https://ssl-tools.net/mailservers .
 * http://www.checktls.com/perl/TestReceiver.pl
+* https://intodns.com/p27.eu
 
 This would be nice to automate.
 
@@ -70,6 +71,7 @@ This would be nice to automate.
 
 * spam protection
 * fail2ban configuration (and telegraf support) for postfix, nginx, sshd
+* backup strategies
 * [unattended-upgrades](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
 * logwatch?
 * [rootkit detection](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)

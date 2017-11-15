@@ -269,6 +269,13 @@ The copy line, below, avoids copying and manually editing the password
 Since telegraf.conf has my influx password in it, I'd rather it not be
 world readable.  On my system, telegraf runs as user telegraf.
 
+I can test the config file thus:
+
+    $ telegraf --input-filter dovecot --test
+
+That command also accepts a --config flag to point to a
+not-yet-in-production config file.
+
 Now I can do a quick test:
 
 	$ influx
