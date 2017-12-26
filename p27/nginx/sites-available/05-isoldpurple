@@ -1,6 +1,6 @@
 server {
   listen              443 ssl;
-  server_name         www.ISoldPurple.com;
+  server_name         www.isoldpurple.com;
 
   ssl_session_timeout 10m;
 
@@ -18,7 +18,7 @@ server {
 
 server {
   listen 80;
-  server_name www.ISoldPurple.com;
+  server_name www.isoldpurple.com;
   return 301 https://$host$request_uri/;
 }
 
@@ -27,8 +27,8 @@ server {
 server {
   listen 80;
   listen 443;
-  server_name ISoldPurple.com;
-  return 301 https://www.ISoldPurple.com$request_uri;
+  server_name isoldpurple.com;
+  return 301 https://www.isoldpurple.com$request_uri;
 
   ssl_certificate /etc/letsencrypt/live/isoldpurple.com/fullchain.pem; # managed by Certbot
   ssl_certificate_key /etc/letsencrypt/live/isoldpurple.com/privkey.pem; # managed by Certbot
