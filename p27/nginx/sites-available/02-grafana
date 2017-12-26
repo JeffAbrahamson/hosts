@@ -22,15 +22,3 @@ server {
   server_name monitor.p27.eu;
   return 301 https://$host$request_uri;
 }
-
-server {
-  listen 80;
-  server_name localhost;
-
-  location /nginx_status {
-    stub_status;
-    access_log off;
-    allow 127.0.0.1;
-    deny all;
-  }
-}
