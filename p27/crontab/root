@@ -23,3 +23,4 @@
 17 5 * * *    /usr/bin/certbot renew --quiet
 57 * * * *    /usr/bin/rsync -a --delete --quiet /home/jeff/src/jma/p27/site/ /var/www/p27/
 58 * * * *    /usr/bin/rsync -a --delete --quiet /home/jeff/src/jma/isoldpurple/site/ /var/www/isoldpurple/
+59 * * * *    /usr/bin/rsync -a --delete --quiet /home/jeff/src/jma/tn/site/ /var/www/tn/

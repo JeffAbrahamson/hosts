@@ -1,0 +1,35 @@
+server {
+  listen              443 ssl;
+  server_name         www.transport-nantes.com;
+
+  ssl_session_timeout 10m;
+
+  rewrite_log on;
+  index index.html;
+
+  root /var/www/tn;
+
+  location / {
+  }
+
+}
+
+server {
+  listen 80;
+  server_name www.transport-nantes.com;
+  return 301 https://$host$request_uri/;
+
+    # Redirect non-https traffic to https
+    # if ($scheme != "https") {
+    #     return 301 https://$host$request_uri;
+    # } # managed by Certbot
+
+}
+
+# Redirect requests for transport-nantes.com to www.transport-nantes.com.
+server {
+  listen 80;
+  listen 443;
+  server_name transport-nantes.com;
+  return 301 https://www.transport-nantes.com$request_uri;
+}

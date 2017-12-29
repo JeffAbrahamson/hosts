@@ -76,6 +76,7 @@ The local site configurations, noted in [nginx.md](nginx.md) are these
 
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/01-www)
     (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/05-isoldpurple)
+    (cd /etc/nginx/sites-enabled && sudo ln -s ../sites-available/06-transport-nantes)
 
 ### Local certbot configuration
 
@@ -86,6 +87,7 @@ The local site configurations, noted in [nginx.md](nginx.md) are these
     # When asked, enter my email address.
     # Certbot config is saved in /etc/letsencrypt/
     sudo certbot --agree-tos -m jeff@p27.eu --nginx -d isoldpurple.com -d www.isoldpurple.com
+    sudo certbot --agree-tos -m jeff@p27.eu --nginx -d transport-nantes.com -d www.transport-nantes.com
 
 ### Actually serve some content
 
@@ -96,6 +98,9 @@ The local site configurations, noted in [nginx.md](nginx.md) are these
     (cd ~/src/jma && git clone https://github.com/JeffAbrahamson/isoldpurple.git)
     sudo mkdir /var/www/isoldpurple
     sudo cp -r ~/src/jma/isoldpurple/site/ /var/www/isoldpurple/
+    (cd ~/src/jma && git clone https://github.com/transport-nantes/tn.git)
+    sudo mkdir /var/www/tn
+    sudo cp -r ~/src/jma/tn/site/ /var/www/tn/
 
     # Crontab files for root and for jeff are available at crontab/root
     # and crontab/jeff.  The below is just explanation.
@@ -104,12 +109,10 @@ The local site configurations, noted in [nginx.md](nginx.md) are these
     # crontab to add these lines.  In the case of p27, the site is
     # generated from p27-src, so I'll eventually want to make a deploy
     # key so that the auto-generation can happen on p27.
-    47 * * * *  cd /home/jeff/src/jma/p27 && /usr/bin/git pull --ff-only
-    48 * * * *  cd /home/jeff/src/jma/isoldpurple && /usr/bin/git pull --ff-only
+    Cf. [crontab/jeff](crontab/jeff)
 
     # and root's crontab to add these lines:
-    57 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/p27/site/ /var/www/p27/
-    58 * * * *  /usr/bin/rsync -va --delete /home/jeff/src/jma/isoldpurple/site/ /var/www/isoldpurple/
+    Cf. [crontab/root](crontab/root)
 
 
 ## mail
