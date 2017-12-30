@@ -12,6 +12,9 @@ server {
   location / {
   }
 
+
+ssl_certificate /etc/letsencrypt/live/transport-nantes.com/fullchain.pem; # managed by Certbot
+ssl_certificate_key /etc/letsencrypt/live/transport-nantes.com/privkey.pem; # managed by Certbot
 }
 
 server {
@@ -32,4 +35,13 @@ server {
   listen 443;
   server_name transport-nantes.com;
   return 301 https://www.transport-nantes.com$request_uri;
+
+ssl_certificate /etc/letsencrypt/live/transport-nantes.com/fullchain.pem; # managed by Certbot
+ssl_certificate_key /etc/letsencrypt/live/transport-nantes.com/privkey.pem; # managed by Certbot
+
+    # Redirect non-https traffic to https
+    # if ($scheme != "https") {
+    #     return 301 https://$host$request_uri;
+    # } # managed by Certbot
+
 }

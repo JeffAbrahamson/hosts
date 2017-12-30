@@ -29,10 +29,10 @@ to https.
     sudo service nginx reload
 
     ###############################################################
-	# Now follow the local instructions for certificate generation.
-	# To do that, I'll have to remove all SSL lines from the configs,
-	# then re-copy them from git.
-	# ##############################################################
+    # Now follow the local instructions for certificate generation.
+    # To do that, I'll have to remove all SSL lines from the configs,
+    # then re-copy them from git.
+    # ##############################################################
 
     # And keep the certificates updated by putting this in root
     # crontab (the time is arbitrary).  Note, however, that the full
