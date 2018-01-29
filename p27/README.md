@@ -63,8 +63,16 @@ hole lists, etc.  Here are some resources:
 * https://ssl-tools.net/mailservers .
 * http://www.checktls.com/perl/TestReceiver.pl
 * https://intodns.com/p27.eu
+* https://mxtoolbox.com/
 
 This would be nice to automate.
+
+Google's postmaster tools are also useful, as is validating my domain
+with those tools.
+
+    https://postmaster.google.com/
+
+Cf.  https://support.google.com/mail/answer/6227174
 
 
 ## To Do
@@ -77,3 +85,6 @@ This would be nice to automate.
 * [rootkit detection](https://gist.github.com/dominikwilkowski/435054905c3c7abc2badc92a0acff4ba)
 * tripwire?
 * kapacitor or siren (nantes-2)
+* DKIM, DMARC [cf google](https://support.google.com/mail/answer/81126?p=UnsolicitedRateLimitError&visit_id=1-636513453089865261-2099669087&rd=1)
+* [Postmaster tools](https://support.google.com/mail/answer/6227174) for all domains served
+* Check [gmail resources](https://support.google.com/mail/answer/175365?hl=en)
