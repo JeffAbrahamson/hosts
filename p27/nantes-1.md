@@ -209,8 +209,8 @@ Cf. http://www.postfix.org/VIRTUAL_README.html
 
 Now tell postfix to update its database:
 
-    sudo postmap /etc/postfix/virtual
-    sudo service postfix reload
+    sudo postmap /etc/postfix/virtual    # I've updated virtual
+    sudo service postfix reload          # I've updated main.cf
 
 I can test imaps connection thus:
 
