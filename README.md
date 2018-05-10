@@ -22,3 +22,17 @@ On each host for which I want to be able to print, I need to do the following:
 * Note that the environment variable PRINTER is important to some
   things trying to print, especially old-school commandline things
   (and emacs).
+
+## Misc notes
+
+The program `hardinfo` provides a GUI with hardware info.  There are
+commandline versions for most or all of what it reports.
+
+On birdsong, I ran `sudo sensors-detect` to find the module that
+provides fan info.  (Does it make the fan work?)
+
+Running `sensors` provides CPU temperature and fan speed.
+
+Running `sudo fwts fan` provides a report in `results.log` describing
+what is discoverable about the fans.  In my case here (ubuntu 17.10 on
+birdsong), it doesn't provide much information beyond fan existence.
