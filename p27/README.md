@@ -64,6 +64,15 @@ with those tools.
 
 Cf.  https://support.google.com/mail/answer/6227174
 
+## (Unreasonable?) giants
+
+Some of the large ISP's and mail providers provide tools to monitor
+how their network views my domain.  This seems nice and reasonable,
+although they too often don't provide actionable information, just
+"there is/isn't a problem", which seems less reasonable.
+
+* https://sendersupport.olc.protection.outlook.com/snds/index.aspx
+
 
 ## To Do
 
