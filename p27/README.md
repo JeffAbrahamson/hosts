@@ -27,17 +27,7 @@ ArsTechnica that may be worth the read for those interested.
 
 ## DNS
 
-My DNS zone file:
-
-	@ 10800 IN A 138.197.178.0
-	nantes-1 10800 IN A 138.197.178.0
-	data 10800 IN CNAME nantes-1.p27.eu.
-	influxdb 10800 IN CNAME nantes-1.p27.eu.
-	mail 10800 IN CNAME nantes-1.p27.eu.
-	monitor 10800 IN CNAME nantes-1.p27.eu.
-	www 10800 IN CNAME nantes-1.p27.eu.
-	@ 10800 IN MX 50 nantes-1.p27.eu.
-	@ 10800 IN TXT "v=spf1 include:_mailcust.gandi.net ?all"
+For (maybe out of date) copies of my DNS zone files, check srd: p27-dns.
 
 
 ## I am using two hosts
