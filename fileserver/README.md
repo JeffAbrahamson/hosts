@@ -76,9 +76,23 @@ It should live in `$DATA/hosts/$(hostname)`
     #   /etc/netatalk/AppleVolumes.default (setup serving directory and turn on time machine support)
     #   /etc/default/netatalk (turn on CNID_MEATD_RUN and AFPD_RUN)
 
+This no longer works.  That is, it works on the server ( think), but
+his new Mac is unable to connect.  At the same time, the netatalk
+package version bumped up, so maybe it's that.
+
+I should probably try setting this up to run via samba instead and see
+how that goes.
+
 ## Unison
 
 Copy the `$HOME/.unison/` cache files from the old fileserver if available.
+
+## Pi-hole
+
+The pi-hole installation required my explicitly installing libgamin0,
+which replaces libfam, which appears to be obsolete.  This had
+prevented lighttpd from starting.
+
 
 ## Things to do
 
