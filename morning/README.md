@@ -12,6 +12,7 @@ Machine up instructions
   sudo apt-get install -y  sqlite3 python3-git python3-matplotlib
   sudo apt-get install -y  texlive-science texlive-science-doc
   sudo apt-get install -y  texlive-extra-utils make-doc vagrant
+  sudo apt-get install -y  texlive-lang-french texlive-fonts-extra
 - fetch initial git repos manually
     git clone https://github.com/JeffAbrahamson/dotfiles.git
     git clone https://github.com/JeffAbrahamson/hosts.git
