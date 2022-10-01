@@ -13,6 +13,7 @@ Machine up instructions
   sudo apt-get install -y  texlive-science texlive-science-doc
   sudo apt-get install -y  texlive-extra-utils make-doc vagrant
   sudo apt-get install -y  texlive-lang-french texlive-fonts-extra
+  sudo apt-get install -y  gnucash gnucash-common gnucash-docs python3-gnucash libdbd-sqlite3
 - fetch initial git repos manually
     git clone https://github.com/JeffAbrahamson/dotfiles.git
     git clone https://github.com/JeffAbrahamson/hosts.git
