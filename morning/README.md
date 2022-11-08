@@ -16,6 +16,9 @@ Machine up instructions
   sudo apt-get install -y  gnucash gnucash-common gnucash-docs python3-gnucash libdbd-sqlite3
   sudo apt-get install -y  fbreader bookworm gnome-books mupdf mupdf-tools
   sudo apt-get install -y  okular okular-extra-backends
+  sudo apt-get install -y  python3-sklearn python3-sklearn-lib python3-sklearn-pandas
+  sudo apt-get install -y  python-sklearn-doc
+  sudo apt-get install -y  jhead exiftran
 - fetch initial git repos manually
     git clone https://github.com/JeffAbrahamson/dotfiles.git
     git clone https://github.com/JeffAbrahamson/hosts.git
