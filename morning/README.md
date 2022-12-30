@@ -17,9 +17,12 @@ Machine up instructions
   sudo apt-get install -y  fbreader bookworm gnome-books mupdf mupdf-tools
   sudo apt-get install -y  okular okular-extra-backends
   sudo apt-get install -y  python3-sklearn python3-sklearn-lib python3-sklearn-pandas
-  sudo apt-get install -y  python-sklearn-doc darktable
-  sudo apt-get install -y  jhead exiftran vorbis-tools
+  sudo apt-get install -y  python-sklearn-doc darktable tmux dstat ncdu nethogs iftop
+  sudo apt-get install -y  jhead exiftran vorbis-tools mosh fzf percol datamash
   sudo apt-get install -y  black python3-isort
+  sudo apt-get install -y  python3-flake8-deprecated python3-flake8-docstrings
+  sudo apt-get install -y  python3-flake8-comprehensions python3-flake8-builtins
+  sudo apt-get install -y  python3-flake8-blind-except
 - fetch initial git repos manually
     git clone https://github.com/JeffAbrahamson/dotfiles.git
     git clone https://github.com/JeffAbrahamson/hosts.git
