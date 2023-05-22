@@ -10,7 +10,7 @@
 # Cf. README.md.
 
 echo "Installing packages."
-for pkg in $(cat 22.04-packages.txt); do
+for pkg in $(cat 2204-LTS.pkg); do
     sudo apt-get install -y -q "$pkg"
 done
 echo "Finished installing packages."
