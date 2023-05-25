@@ -13,7 +13,9 @@ echo "Installing packages."
 for pkg in $(cat 2204-LTS.pkg); do
     sudo apt-get install -y -q "$pkg"
 done
-echo "Finished installing packages."
+echo "Installing snaps."
+sudo snap install node --classic
+echo "Finished installing packages and snaps."
 
 echo "Now installing dotfiles and source code."
 mkdir "$HOME/bin"
