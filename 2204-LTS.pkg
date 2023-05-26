@@ -58,6 +58,8 @@ okular-extra-backends
 pandoc
 percol
 protobuf-compiler
+pylint
+pylint-doc
 python-sklearn-doc
 python3-fabric
 python3-flake8-blind-except
