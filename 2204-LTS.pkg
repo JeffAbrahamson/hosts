@@ -13,6 +13,7 @@ exiftran
 fabric
 fbreader
 feh
+flake8
 fzf
 g++
 g++-doc
