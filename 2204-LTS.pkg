@@ -5,6 +5,7 @@ black
 bookworm
 clang
 clisp
+cmake
 darktable
 datamash
 dstat
@@ -61,6 +62,7 @@ percol
 protobuf-compiler
 pylint
 pylint-doc
+python-psycopg2-doc
 python-sklearn-doc
 python3-fabric
 python3-flake8-blind-except
@@ -73,6 +75,7 @@ python3-gnucash
 python3-isort
 python3-matplotlib
 python3-pip
+python3-psycopg2
 python3-sklearn
 python3-sklearn-lib
 python3-sklearn-pandas

@@ -15,10 +15,12 @@ for pkg in $(cat 2204-LTS.pkg); do
 done
 echo "Installing snaps."
 sudo snap install node --classic
-for pkg in chromium firefox glow signal-desktop; do
+for pkg in chromium firefox glow gron signal-desktop; do
 	sudo snap install $pkg
 done
 echo "Finished installing packages and snaps."
+
+
 
 echo "Now installing dotfiles and source code."
 mkdir "$HOME/bin"
