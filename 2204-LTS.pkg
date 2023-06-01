@@ -96,7 +96,7 @@ texlive-xetex
 tmux
 unison
 vagrant
-vagrant-virtualbox
+virtualbox
 vorbis-tools
 w3m
 xautolock
