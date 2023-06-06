@@ -4,6 +4,7 @@ auctex
 black
 bookworm
 clang
+clang-format
 clisp
 cmake
 darktable
