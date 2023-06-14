@@ -34,6 +34,7 @@ iftop
 imagemagick
 ipython3
 jhead
+jq
 libboost-all-dev
 libbz2-dev
 libcrypto++
