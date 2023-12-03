@@ -26,23 +26,19 @@ echo "Now installing dotfiles and source code."
 mkdir "$HOME/bin"
 mkdir "$HOME/data"
 mkdir -p "$HOME/src/jma"
-cd "$HOME/src/jma"
 for repo in $(cat 2204-LTS.jma-git); do
-	git clone "$repo"
+    (cd "$HOME/src/jma"; git clone "$repo")
 done
-(cd dotfiles; ./install.sh)
-(cd srd/src; make && cp srd "$HOME/bin")
-(cd tsd; make install; cd; ln -s data/tsd tsd)
+(cd "$HOME/src/jma/dotfiles"; ./install.sh)
+(cd "$HOME/src/jma/srd/src"; make && cp srd "$HOME/bin")
+(cd "$HOME/src/jma/tsd"; make install; cd; ln -s data/tsd tsd)
 
-cd ..
 for repo in $(cat 2204-LTS.git); do
-	cd "$HOME/src/"
-	git clone "$repo"
+    (cd "$HOME/src/"; git clone "$repo")
 done
 
-cd jellybooks
 for repo in $(cat 2204-LTS.jellybooks-git); do
-	git clone "$repo"
+    (cd "$HOME/src/jellybooks"; git clone "$repo")
 done
 
 cd "$HOME"

@@ -36,6 +36,7 @@ ipython3
 jhead
 jq
 libboost-all-dev
+libboost-program-options-dev
 libbz2-dev
 libcrypto++
 libcrypto++-dev

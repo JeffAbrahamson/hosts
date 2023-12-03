@@ -30,6 +30,9 @@ them on a USB key in directory "ssh-distrib".
     p27: add to pillar
     jellybooks: add to pillar
 
+Salt apply from a host that already has keys in order to install new
+host keys (and, eventually, remove old keys).
+
 Copy $HOME/srd/ to the USB key:
 
   rsync -a $HOME/srd/ ${usb}/srd
@@ -51,11 +54,50 @@ On the new host,
   rsync -a ${usb}/srd "$HOME/srd"
   exec ssh-agent bash
 
-Finally,
+## Automation
+
+Finally, and this needs an ssh-agent running with loaded credentials:
 
   cd ${usb}/hosts/
   . 2204-LTS.sh
 
+## Post-automation
+
+Once I can connect to siegfried, copy pertinent files.  The precise
+host I want to use as model might change.
+
+  HOST=morning
+  rsync -a siegfried:/jma-4t/jeff/machines/${HOST}/.desktop-images .
+  rsync -a siegfried:/jma-4t/jeff/machines/${HOST}/.unison/*prf .unison/
+  rsync -a siegfried:/jma-4t/jeff/machines/${HOST}/.unison/common .unison/
+  rsync -a siegfried:/jma-4t/jeff/files/work  .
+  rsync -a siegfried:/jma-4t/jeff/files/data  .
+  rsync -a siegfried:/jma-4t/jeff/files/Music/  Music/
+
+Maybe also, depending on available disk space,
+
+  rsync -a siegfried:/jma-4t/jeff/files/Videos/  Videos/
+
+I'll want to run unison syncs before anything important changes, since
+the first run will establish state and unison will ask me about
+anything at all that's changed between the two sides.
+
+  sync-data
+  sync-fast
+  sync-full
+
+
+## Firefox
+
+Create firefox profiles and setup sync.  Cf. srd.  Cf. bin/ff.
+  * Set firefox to default browser, restore tabs
+  * Set search to DDG
+  * Set primary password
+  * Setup sync, enter password and 2FA
+  * Sign-in to google accounts.
+
+Setup signal-desktop
+Connect whatsapp web
 
 ## Printer
 
@@ -89,14 +131,10 @@ birdsong), it doesn't provide much information beyond fan existence.
 
 ## Social media etc.
 
-Create firefox profiles and setup sync.  Cf. srd.
-  * At least jeff, jellybooks, TN, velopolitain, dieu, p27-jeff.
-  * Setup sync (jeff, jellybooks, TN), enter primary password.
-  * Sign-in to google accounts.
 
-Setup signal-desktop
-Connect whatsapp web
+Test that virtualbox works by building any vm
 
-# setup tsd
-  "make install" and ln -s data/tsd tsd
-  git mod: make install should copy bash fns, should ln if needed
+Logout and log back in in i3 or sway.
+
+TODO:
+  * How do I set up keyboard switching so I can get accents?

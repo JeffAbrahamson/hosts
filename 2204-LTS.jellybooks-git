@@ -2,6 +2,7 @@
  git@github.com:Jellybooks/analytics.git
  git@github.com:Jellybooks/candy-wrapper.git
  git@github.com:Jellybooks/candy.git
+ git@github.com:Jellybooks/danube.git
  git@github.com:Jellybooks/discovery_ingest.git
  git@github.com:Jellybooks/epub2to3.git
  git@github.com:Jellybooks/highlight-module.git
