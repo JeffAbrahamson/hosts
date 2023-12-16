@@ -14,6 +14,7 @@ emacs
 exiftran
 fabric
 fbreader
+fd-find
 feh
 flake8
 fzf
@@ -84,6 +85,7 @@ python3-sklearn-lib
 python3-sklearn-pandas
 python3-virtualenv
 redshift
+ripgrep
 rxvt-unicode
 scrot
 sqlite3
