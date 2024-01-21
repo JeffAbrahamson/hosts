@@ -11,6 +11,7 @@ darktable
 datamash
 dstat
 emacs
+exiftags
 exiftran
 fabric
 fbreader
@@ -33,8 +34,10 @@ i3
 iftop
 imagemagick
 ipython3
+isort
 jhead
 jq
+libasound2-dev
 libboost-all-dev
 libboost-program-options-dev
 libbz2-dev
@@ -43,10 +46,15 @@ libcrypto++-dev
 libcrypto++-doc
 libcrypto++-utils
 libdbd-sqlite3
+libjson-c-dev
+libjson-c-doc
 libpq-dev
 libprotobuf-dev
 libpstreams-dev
+libsensors-config
+libsensors-dev
 lightdm
+lm-sensors
 make
 make-doc
 mosh

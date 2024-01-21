@@ -18,7 +18,11 @@ sudo snap install node --classic
 for pkg in chromium firefox glow gron signal-desktop; do
 	sudo snap install $pkg
 done
-echo "Finished installing packages and snaps."
+echo "Installing python packages (pip, user-local)."
+for pkg in $(cat 2204-LTS.pip); do
+    pip install "$pkg"
+done
+echo "Finished installing packages, snaps, and python packages."
 
 
 
