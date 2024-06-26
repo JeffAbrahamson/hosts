@@ -39,6 +39,7 @@ jq
 libboost-all-dev
 libboost-program-options-dev
 libbz2-dev
+libc++1-15
 libcrypto++
 libcrypto++-dev
 libcrypto++-doc
@@ -109,5 +110,6 @@ virtualbox
 vorbis-tools
 w3m
 wdiff
+webp-pixbuf-loader
 xautolock
 xclip
