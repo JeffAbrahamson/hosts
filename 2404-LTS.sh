@@ -11,12 +11,14 @@
 
 echo "Installing packages."
 for pkg in $(cat 2404-LTS.pkg); do
+    echo " -> Installing $pkg..."
     sudo apt-get install -y -q "$pkg"
 done
 echo "Installing snaps."
 sudo snap install node --classic
 for pkg in chromium firefox glow gron signal-desktop; do
-	sudo snap install $pkg
+    echo " -> Installing $pkg..."
+    sudo snap install $pkg
 done
 echo "Finished installing packages and snaps."
 
@@ -27,6 +29,7 @@ mkdir "$HOME/bin"
 mkdir "$HOME/data"
 mkdir -p "$HOME/src/jma"
 for repo in $(cat 2204-LTS.jma-git); do
+    echo " -> Cloning $repo..."
     (cd "$HOME/src/jma"; git clone "$repo")
 done
 (cd "$HOME/src/jma/dotfiles"; ./install.sh)
@@ -34,10 +37,12 @@ done
 (cd "$HOME/src/jma/tsd"; make install; cd; ln -s data/tsd tsd)
 
 for repo in $(cat 2204-LTS.git); do
+    echo " -> Cloning $repo..."
     (cd "$HOME/src/"; git clone "$repo")
 done
 
 for repo in $(cat 2204-LTS.jellybooks-git); do
+    echo " -> Cloning $repo..."
     (cd "$HOME/src/jellybooks"; git clone "$repo")
 done
 

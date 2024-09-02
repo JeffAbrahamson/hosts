@@ -9,6 +9,8 @@ clisp
 cmake
 darktable
 datamash
+docker-compose
+docker.io
 dstat
 emacs
 exiftran
@@ -19,7 +21,6 @@ feh
 flake8
 fzf
 g++
-g++-doc
 gcc
 gh
 gimp
@@ -50,7 +51,6 @@ libdbd-sqlite3
 libpq-dev
 libprotobuf-dev
 libpstreams-dev
-lightdm
 make
 make-doc
 mosh
