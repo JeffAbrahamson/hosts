@@ -9,6 +9,8 @@ clisp
 cmake
 darktable
 datamash
+docker-compose
+docker.io
 dstat
 emacs
 exiftran

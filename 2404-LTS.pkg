@@ -71,6 +71,7 @@ pylint
 pylint-doc
 python-psycopg2-doc
 python-sklearn-doc
+python3-django
 python3-fabric
 python3-flake8-2020
 python3-flake8-black
