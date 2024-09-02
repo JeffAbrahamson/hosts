@@ -47,3 +47,4 @@ ln -s fs/files files
 
 # Let me dim the screen.  Cf. error from  `light -v 1 -U 5`
 sudo adduser jeff video
+sudo adduser jeff docker
