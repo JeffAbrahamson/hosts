@@ -89,6 +89,7 @@ python3-flake8-quotes
 python3-flake8-spellcheck
 python3-git
 python3-gnucash
+python3-importmagic
 python3-isort
 python3-matplotlib
 python3-pip
