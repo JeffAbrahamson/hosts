@@ -73,6 +73,7 @@ python-bs4-doc
 python-psycopg2-doc
 python-sklearn-doc
 python3-bs4
+python3-dateparser
 python3-django
 python3-fabric
 python3-flake8-2020
