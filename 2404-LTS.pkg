@@ -90,6 +90,7 @@ python3-flake8-mutable
 python3-flake8-noqa
 python3-flake8-quotes
 python3-flake8-spellcheck
+python3-full
 python3-git
 python3-gnucash
 python3-importmagic
