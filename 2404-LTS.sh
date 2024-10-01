@@ -9,6 +9,14 @@
 #
 # Cf. README.md.
 
+echo "Adding docker package repository."
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo cp -f docker.list /etc/apt/sources.list.d/docker.list
+sudo apt-update
+
 echo "Installing packages."
 for pkg in $(cat 2404-LTS.pkg); do
     echo " -> Installing $pkg..."
