@@ -1,0 +1,13 @@
+# exec "/usr/sbin/wlgreet; swaymsg exit"
+exec "/usr/local/bin/wlgreet --command 'ssh-agent sway'; swaymsg exit"
+
+bindsym Mod4+shift+e exec swaynag \
+	-t warning \
+	-m 'What do you want to do?' \
+	-b 'Poweroff' 'systemctl poweroff -i' \
+	-b 'Reboot' 'systemctl reboot -i'
+
+output * bg /etc/greetd/background fill
+
+# include /etc/sway/config.d/*
+# include /etc/greetd/sway-config.d/*
