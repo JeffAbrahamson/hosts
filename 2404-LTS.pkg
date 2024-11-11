@@ -23,6 +23,9 @@ fbreader
 fd-find
 feh
 flake8
+fonts-arphic-ukai
+fonts-arphic-uming
+fonts-noto-cjk-extra
 fzf
 g++
 gcc
@@ -64,8 +67,8 @@ mupdf-tools
 mutt
 ncal
 ncdu
-nethogs
 net-tools
+nethogs
 okular
 okular-extra-backends
 pandoc
@@ -73,6 +76,9 @@ percol
 protobuf-compiler
 pylint
 pylint-doc
+python-bs4-doc
+python-psycopg2-doc
+python-sklearn-doc
 python3-bs4
 python3-dateparser
 python3-django
@@ -105,9 +111,6 @@ python3-sklearn
 python3-sklearn-lib
 python3-sklearn-pandas
 python3-virtualenv
-python-bs4-doc
-python-psycopg2-doc
-python-sklearn-doc
 qrencode
 redshift
 ripgrep
@@ -119,8 +122,11 @@ sshfs
 sysvbanner
 texlive-extra-utils
 texlive-fonts-extra
+texlive-lang-chinese
+texlive-lang-cjk
 texlive-lang-cjk
 texlive-lang-french
+texlive-lang-japanese
 texlive-lang-japanese
 texlive-latex-extra
 texlive-latex-recommended
