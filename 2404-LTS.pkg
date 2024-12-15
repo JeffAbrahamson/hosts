@@ -122,6 +122,7 @@ rustc
 rxvt-unicode
 scipy
 scrot
+slurp
 sqlite3
 sshfs
 sway
