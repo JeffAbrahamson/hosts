@@ -123,6 +123,11 @@ scipy
 scrot
 sqlite3
 sshfs
+sway
+sway-backgrounds
+swaybg
+swayidle
+swaylock
 sysvbanner
 texlive-extra-utils
 texlive-fonts-extra
