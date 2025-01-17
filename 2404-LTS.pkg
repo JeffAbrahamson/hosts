@@ -17,7 +17,6 @@ docker-ce-cli
 docker-compose-plugin
 docker.io
 dstat
-elpa-dockerfile-mode
 emacs
 exiftran
 fabric
