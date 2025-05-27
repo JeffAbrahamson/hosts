@@ -18,6 +18,7 @@ docker-ce-cli
 docker-compose-plugin
 docker.io
 dstat
+elpa-epc
 emacs
 exiftran
 fabric
@@ -112,6 +113,7 @@ python3-flake8-spellcheck
 python3-full
 python3-git
 python3-gnucash
+python3-httpx
 python3-importmagic
 python3-isort
 python3-matplotlib
