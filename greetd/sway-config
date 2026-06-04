@@ -4,8 +4,19 @@ exec "/usr/local/bin/wlgreet --command 'ssh-agent sway'; swaymsg exit"
 bindsym Mod4+shift+e exec swaynag \
 	-t warning \
 	-m 'What do you want to do?' \
-	-b 'Poweroff' 'systemctl poweroff -i' \
-	-b 'Reboot' 'systemctl reboot -i'
+	-b 'Poweroff' 'systemctl poweroff --check-inhibitors' \
+	-b 'Reboot' 'systemctl reboot --check-inhibitors'
+
+set $shutdown_mode "Power off (y) or reboot (r)? [Esc/n cancels]"
+
+bindsym Control+Shift+Q mode "$shutdown_mode"
+mode "$shutdown_mode" {
+    bindsym y          exec systemctl poweroff --check-inhibitors
+    bindsym r          exec systemctl reboot --check-inhibitors
+    bindsym Control+g  mode default
+    bindsym n          mode default
+    bindsym Escape     mode default
+}
 
 output * bg /etc/greetd/background fill
 
