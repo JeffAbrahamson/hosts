@@ -36,7 +36,7 @@ echo "Now installing dotfiles and source code."
 mkdir "$HOME/bin"
 mkdir "$HOME/data"
 mkdir -p "$HOME/src/jma"
-for repo in $(cat 2204-LTS.jma-git); do
+for repo in $(cat jma-git); do
     echo " -> Cloning $repo..."
     (cd "$HOME/src/jma"; git clone "$repo")
 done
@@ -44,12 +44,12 @@ done
 (cd "$HOME/src/jma/srd/src"; make && cp srd "$HOME/bin")
 (cd "$HOME/src/jma/tsd"; make install; cd; ln -s data/tsd tsd)
 
-for repo in $(cat 2204-LTS.git); do
+for repo in $(cat extra-git); do
     echo " -> Cloning $repo..."
     (cd "$HOME/src/"; git clone "$repo")
 done
 
-for repo in $(cat 2204-LTS.jellybooks-git); do
+for repo in $(cat jellybooks-git); do
     echo " -> Cloning $repo..."
     (cd "$HOME/src/jellybooks"; git clone "$repo")
 done
