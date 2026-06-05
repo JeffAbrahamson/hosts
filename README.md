@@ -10,56 +10,38 @@ Just to be particularly safe, however, the repo is private.
 
 ## Preparation
 
-Given a usb key at path $usb:
+Given a usb key at path $usb, run on the reference machine:
 
-Create ssh keys for home machines, git, p27, and jellybooks.  Store
-them on a USB key in directory "ssh-distrib".
+  ./make-usb-for-install.sh $usb
 
-  To generate the pass phrases:
-    head -c $((40 + $RANDOM / 2000)) < /dev/urandom | base64
+This generates four ed25519 SSH keys, copies srd, unison configs, and
+this repo to the USB, and prints each public key with distribution
+instructions.  Keys generated:
 
-  To generate the keys:
-    ssh-keygen -t ed25519 -a 100
+  ~/.ssh/id_ed25519           — home machines (loaded by: ssh-add)
+  ~/.ssh/id_ed25519.github    — GitHub        (loaded by: ssh-github)
+  ~/.ssh/id_ed25519.p27       — p27 server    (loaded by: ssh-p27)
+  ~/.ssh/id_ed25519.jellybooks — Jellybooks   (loaded by: ssh-jelly)
 
-  Store the pass phrases in ssh-distrib.priv and in srd
-  (cf. ssh-setup)
+After the script runs, distribute the public keys manually:
 
-  To deploy them, distribute public keys:
-    home: add to local machines (in authorized_hosts)
-    github: add to github keys
-    p27: add to pillar
-    jellybooks: add to pillar
+  home:       add id_ed25519.pub to ~/.ssh/authorized_keys on home machines
+  github:     add id_ed25519.github.pub to https://github.com/settings/keys
+  p27:        add id_ed25519.p27.pub to p27 Salt pillar
+  jellybooks: add id_ed25519.jellybooks.pub to Jellybooks Salt pillar
 
-Salt apply from a host that already has keys in order to install new
-host keys (and, eventually, remove old keys).
-
-Copy $HOME/srd/ to the USB key:
-
-  rsync -a $HOME/srd/ ${usb}/srd
-
-Copy unison configs:
-
-  mkdir ${usb}/unison
-  rsync -a "$HOME/.unison/" ${usb}/unison
-
-Copy the hosts repo to the USB key:
-
-  rsync -a $HOME/src/jma/hosts/ ${usb}/hosts/
-
-On the new host,
-
-  cd "$HOME"
-  mkdir .ssh && chmod 700 .ssh
-  rsync -a ${usb}/ssh-distrib/* .ssh/
-  rsync -a ${usb}/srd "$HOME/srd"
-  exec ssh-agent bash
+Then run Salt apply from an existing host to push the new keys.
+Do this before moving the USB to the new host.
 
 ## Automation
 
-Finally, and this needs an ssh-agent running with loaded credentials:
+On the new host, with the USB mounted at $usb:
 
-  cd ${usb}/hosts/
-  . 2204-LTS.sh
+  bash ${usb}/hosts/install-from-usb.sh
+
+This copies SSH keys and srd to the new host, starts ssh-agent, prompts
+for each key passphrase (displaying it from the USB for easy copy-paste),
+and then runs 2404-LTS.sh to install packages and clone repositories.
 
 ## Post-automation
 
