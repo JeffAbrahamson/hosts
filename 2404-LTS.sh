@@ -15,13 +15,28 @@ sudo apt install -y ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo cp -f docker.list /etc/apt/sources.list.d/docker.list
-sudo apt-update
+
+# Ookla speedtest: no noble package, but jammy works on noble.
+echo "Adding Ookla speedtest package repository."
+curl -fsSL https://packagecloud.io/ookla/speedtest-cli/gpgkey \
+    | sudo gpg --dearmor -o /etc/apt/keyrings/ookla_speedtest-cli-archive-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/ookla_speedtest-cli-archive-keyring.gpg] \
+https://packagecloud.io/ookla/speedtest-cli/ubuntu/ jammy main" \
+    | sudo tee /etc/apt/sources.list.d/ookla_speedtest-cli.list
+
+sudo apt update
 
 echo "Installing packages."
 for pkg in $(cat 2404-LTS.pkg); do
     echo " -> Installing $pkg..."
     sudo apt-get install -y -q "$pkg"
 done
+
+echo "Installing Ookla speedtest."
+sudo apt-get install -y -q speedtest
+# The wrapper script expects the binary at /usr/local/bin/speedtest.
+sudo ln -sf /usr/bin/speedtest /usr/local/bin/speedtest
+
 echo "Installing snaps."
 sudo snap install node --classic
 for pkg in chromium firefox glow gron signal-desktop; do
