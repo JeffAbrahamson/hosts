@@ -31,6 +31,11 @@ for pkg in $(cat 2404-LTS.pkg); do
     echo " -> Installing $pkg..."
     sudo apt-get install -y -q "$pkg"
 done
+echo "Removing packages."
+for pkg in $(cat 2404-LTS-remove.pkg); do
+    echo " -> Removing $pkg..."
+    sudo apt-get remove -y -q "$pkg"
+done
 
 echo "Installing Ookla speedtest."
 sudo apt-get install -y -q speedtest

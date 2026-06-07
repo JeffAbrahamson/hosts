@@ -18,3 +18,8 @@ if [ ! -r /etc/greetd/background ]; then
 	fi
     fi
 fi
+
+sudo systemctl enable greetd.service --force
+# sudo systemctl disable gdm3.service
+sudo apt-get remove -y gdm3
+
