@@ -74,7 +74,10 @@ if [[ -z "$npm_bin" ]]; then
     echo "npm not found after installing the node snap." >&2
     exit 1
 fi
-sudo "$npm_bin" install -g @anthropic-ai/claude-code @openai/codex || exit 1
+mkdir -p "$HOME/.npm-global"
+"$npm_bin" config set prefix "$HOME/.npm-global" || exit 1
+export PATH="$HOME/.npm-global/bin:$PATH"
+"$npm_bin" install -g @anthropic-ai/claude-code @openai/codex || exit 1
 command -v claude >/dev/null || { echo "claude CLI was not installed on PATH." >&2; exit 1; }
 command -v codex >/dev/null || { echo "codex CLI was not installed on PATH." >&2; exit 1; }
 
