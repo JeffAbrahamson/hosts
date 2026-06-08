@@ -7,7 +7,8 @@ bindsym Mod4+shift+e exec swaynag \
 	-b 'Poweroff' 'systemctl poweroff --check-inhibitors' \
 	-b 'Reboot' 'systemctl reboot --check-inhibitors'
 
-set $shutdown_mode "Power off (y) or reboot (r)? [Esc/n cancels]"
+# set $shutdown_mode "Power off (y) or reboot (r)? [Esc/n cancels]"
+set $shutdown_mode "Shutdown?"
 
 bindsym Control+Shift+Q mode "$shutdown_mode"
 mode "$shutdown_mode" {

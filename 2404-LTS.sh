@@ -68,11 +68,20 @@ for pkg in chromium firefox glow gron signal-desktop; do
 done
 echo "Finished installing packages and snaps."
 
+echo "Installing AI coding CLIs."
+npm_bin="$(command -v npm)"
+if [[ -z "$npm_bin" ]]; then
+    echo "npm not found after installing the node snap." >&2
+    exit 1
+fi
+sudo "$npm_bin" install -g @anthropic-ai/claude-code @openai/codex || exit 1
+command -v claude >/dev/null || { echo "claude CLI was not installed on PATH." >&2; exit 1; }
+command -v codex >/dev/null || { echo "codex CLI was not installed on PATH." >&2; exit 1; }
 
 
 echo "Now installing dotfiles and source code."
-mkdir "$HOME/bin"
-mkdir "$HOME/data"
+mkdir -p "$HOME/bin"
+mkdir -p "$HOME/data"
 mkdir -p "$HOME/src/jma"
 for repo in $(cat jma-git); do
     echo " -> Cloning $repo..."
@@ -87,14 +96,31 @@ for repo in $(cat extra-git); do
     (cd "$HOME/src/"; git clone "$repo")
 done
 
+mkdir -p "$HOME/src/jellybooks"
 for repo in $(cat jellybooks-git); do
     echo " -> Cloning $repo..."
     (cd "$HOME/src/jellybooks"; git clone "$repo")
 done
 
+echo "Installing wlgreet."
+mkdir -p "$HOME/src"
+if [[ ! -d "$HOME/src/wlgreet/.git" ]]; then
+    git clone https://git.sr.ht/~kennylevinsen/wlgreet "$HOME/src/wlgreet"
+fi
+(
+    cd "$HOME/src/wlgreet"
+    cargo build --release
+    sudo install -m 0755 target/release/wlgreet /usr/local/bin/wlgreet
+) || exit 1
+
 cd "$HOME"
-mkdir fs
+mkdir -p fs
 ln -s fs/files files
+
+echo "Creating placeholder background images."
+sudo install -D -m 0644 /dev/null /etc/greetd/background
+mkdir -p "$HOME/.desktop-images"
+touch "$HOME/.desktop-images/empty.png"
 
 # Let me dim the screen.  Cf. error from  `light -v 1 -U 5`
 sudo adduser jeff video

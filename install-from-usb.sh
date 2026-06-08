@@ -46,7 +46,8 @@ fi
 if [[ -d "${USB}/unison" ]]; then
     echo "Copying unison configs..."
     mkdir -p "$HOME/.unison"
-    rsync -a "${USB}/unison/" "$HOME/.unison/"
+    rsync -a --include='common' --include='*.prf' --exclude='*' \
+        "${USB}/unison/" "$HOME/.unison/"
 else
     echo "Warning: ${USB}/unison not found, skipping."
 fi
@@ -65,4 +66,14 @@ while IFS='=' read -r name _; do
 done < <(env)
 
 echo "Starting fresh ssh-agent..."
-exec ssh-agent ./2404-LTS.sh
+ssh-agent ./2404-LTS.sh
+
+echo ""
+echo "=== Installation finished ==="
+echo "Read ${SCRIPT_DIR}/AFTER-INSTALL.md for the remaining manual steps."
+echo ""
+if command -v glow >/dev/null 2>&1; then
+    glow "${SCRIPT_DIR}/AFTER-INSTALL.md"
+else
+    cat "${SCRIPT_DIR}/AFTER-INSTALL.md"
+fi

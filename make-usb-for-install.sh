@@ -84,8 +84,11 @@ fi
 
 # Copy unison configs
 if [[ -d "$HOME/.unison" ]]; then
-    echo "Copying ~/.unison/ to USB..."
-    rsync -a "$HOME/.unison/" "${USB}/unison/"
+    echo "Copying selected ~/.unison/ configs to USB..."
+    mkdir -p "${USB}/unison"
+    rsync -a --delete --delete-excluded \
+        --include='common' --include='*.prf' --exclude='*' \
+        "$HOME/.unison/" "${USB}/unison/"
 else
     echo "Warning: ~/.unison/ not found, skipping."
 fi
