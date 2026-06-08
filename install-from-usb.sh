@@ -51,33 +51,18 @@ else
     echo "Warning: ${USB}/unison not found, skipping."
 fi
 
-# Start ssh-agent
-echo ""
-echo "Starting ssh-agent..."
-eval "$(ssh-agent -s)"
-
-# Load each SSH key.  Print the passphrase before prompting so it can be
-# copied and pasted into the ssh-add prompt.
-KEYS=(id_ed25519 id_ed25519.github id_ed25519.p27 id_ed25519.jellybooks)
-
-for key in "${KEYS[@]}"; do
-    keyfile="$HOME/.ssh/${key}"
-    passfile="$HOME/.ssh-distrib.priv/${key}.pass"
-    if [[ ! -f "$keyfile" ]]; then
-        echo "Key ${key} not found, skipping."
-        continue
-    fi
-    echo ""
-    if [[ -f "$passfile" ]]; then
-        echo "Passphrase for ${key}: $(cat "$passfile")"
-    else
-        echo "No passphrase file found for ${key} — enter it manually."
-    fi
-    ssh-add "$keyfile"
-done
-
 # Run main installation script
 echo ""
 echo "=== Starting main installation ==="
 cd "${USB}/hosts/"
-bash 2404-LTS.sh
+chmod 755 2404-LTS.sh
+
+# Drop inherited agent/keyring state before ssh-agent creates a fresh one.
+while IFS='=' read -r name _; do
+    case "$name" in
+        SSH*) unset "$name" ;;
+    esac
+done < <(env)
+
+echo "Starting fresh ssh-agent..."
+exec ssh-agent ./2404-LTS.sh

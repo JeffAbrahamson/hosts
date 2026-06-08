@@ -39,9 +39,10 @@ On the new host, with the USB mounted at $usb:
 
   bash ${usb}/hosts/install-from-usb.sh
 
-This copies SSH keys and srd to the new host, starts ssh-agent, prompts
-for each key passphrase (displaying it from the USB for easy copy-paste),
-and then runs 2404-LTS.sh to install packages and clone repositories.
+This copies SSH keys and srd to the new host, then execs 2404-LTS.sh
+under a fresh ssh-agent.  2404-LTS.sh prompts for each key passphrase
+(displaying it from the USB for easy copy-paste), installs packages, and
+clones repositories.
 
 ## Post-automation
 

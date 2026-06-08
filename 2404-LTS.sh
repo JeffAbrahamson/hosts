@@ -9,6 +9,24 @@
 #
 # Cf. README.md.
 
+KEYS=(id_ed25519 id_ed25519.github id_ed25519.p27 id_ed25519.jellybooks)
+
+for key in "${KEYS[@]}"; do
+    keyfile="$HOME/.ssh/${key}"
+    passfile="$HOME/.ssh-distrib.priv/${key}.pass"
+    if [[ ! -f "$keyfile" ]]; then
+        echo "Key ${key} not found, skipping."
+        continue
+    fi
+    echo ""
+    if [[ -f "$passfile" ]]; then
+        echo "Passphrase for ${key}: $(cat "$passfile")"
+    else
+        echo "No passphrase file found for ${key} - enter it manually."
+    fi
+    ssh-add "$keyfile" || exit 1
+done
+
 echo "Adding docker package repository."
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg
