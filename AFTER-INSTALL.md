@@ -37,6 +37,7 @@ sync-full
 
 * Set up Firefox profiles and sync.  Cf. srd and bin/ff.
 * Log in to Google accounts.
+* Copy firefox alias files, which are not in git due to sensitive URLs.  (Question: could this change, since the repo is private?)
 * Run signal-desktop once to authenticate.
 * Connect to Claude Code and Codex CLI.
 * Connect WhatsApp Web.
@@ -47,7 +48,6 @@ sync-full
   are pre-cached.
 * Test ssh to p27 and jellybooks.
 * Run `/usr/local/bin/speedtest` once to accept the terms and conditions.
-* Test that virtualbox works by building any VM.
 
 ## Background Images
 
@@ -64,9 +64,9 @@ On each host for which I want to be able to print:
 * Make sure cups is running: `sudo service cups restart`.
 * Visit `http://localhost:631/admin/` (or `http://localhost:631/` then
   "Add printer").  Choose "Discovered Network Printers: epson-wf-2965".
-  Printer name is "プリンタ".
-  Printer location is "ガレージ".
-* In General, set double-sided to "long edge".
+  Printer name is "プリンタ" or perhaps "hp-garage".
+  Printer location is "ガレージ" or perhaps "hp-garage".
+* In General, set double-sided to "long edge" if available.
 * Note that the environment variable PRINTER is important to some things
   trying to print, especially old-school commandline things and emacs.
 
