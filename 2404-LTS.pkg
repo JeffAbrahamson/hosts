@@ -9,8 +9,8 @@ cargo
 clang
 clang-format
 clang-tidy
-clisp
 cliphist
+clisp
 cmake
 containerd.io
 darktable
@@ -83,6 +83,7 @@ libpam0g-dev
 libpq-dev
 libprotobuf-dev
 libpstreams-dev
+libreoffice
 make
 make-doc
 mako-notifier
