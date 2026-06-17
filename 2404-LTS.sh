@@ -77,9 +77,10 @@ fi
 mkdir -p "$HOME/.npm-global"
 "$npm_bin" config set prefix "$HOME/.npm-global" || exit 1
 export PATH="$HOME/.npm-global/bin:$PATH"
-"$npm_bin" install -g @anthropic-ai/claude-code @openai/codex || exit 1
+"$npm_bin" install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli || exit 1
 command -v claude >/dev/null || { echo "claude CLI was not installed on PATH." >&2; exit 1; }
 command -v codex >/dev/null || { echo "codex CLI was not installed on PATH." >&2; exit 1; }
+command -v gemini >/dev/null || { echo "gemini CLI was not installed on PATH." >&2; exit 1; }
 
 
 echo "Now installing dotfiles and source code."
