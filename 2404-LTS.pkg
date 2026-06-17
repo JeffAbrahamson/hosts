@@ -50,6 +50,7 @@ gnucash-common
 gnucash-docs
 gnuplot
 gnuplot-doc
+gpxviewer
 greetd
 grim
 grimshot
@@ -65,6 +66,7 @@ iotop-c
 ipython3
 isort
 jhead
+jmtpfs
 jq
 kitty
 latexmk
@@ -92,6 +94,7 @@ miller
 mosh
 mplayer
 mpv
+mtp-tools
 mupdf
 mupdf-tools
 mutt
