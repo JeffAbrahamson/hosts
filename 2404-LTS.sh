@@ -91,7 +91,8 @@ for repo in $(cat jma-git); do
     echo " -> Cloning $repo..."
     (cd "$HOME/src/jma"; git clone "$repo")
 done
-(cd "$HOME/src/jma/dotfiles"; ./install.sh)
+(cd "$HOME/src/jma/dotfiles"; make install)
+install -D -m 0644 dotfiles/bash/rc_post/firefox-functions "$HOME/.dotfiles/bash/rc_post/firefox-functions"
 (cd "$HOME/src/jma/srd/src"; make && cp srd "$HOME/bin")
 (cd "$HOME/src/jma/tsd"; make install; cd; ln -s data/tsd tsd)
 

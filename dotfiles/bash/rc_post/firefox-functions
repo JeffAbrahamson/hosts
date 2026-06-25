@@ -1,0 +1,59 @@
+# Source this.
+
+_ff_jeff="firefox -P jeff --new-window "
+_ff_p27="firefox -P p27-jeff --new-window "
+_ff_jellybooks="firefox -P jellybooks --new-window "
+_ff_tn="firefox -P tn-jeff --new-window "
+
+# Jeff
+ja-cyclopathes() { ${_ff_jeff} 'https://app.slack.com/client/T1DU91AKX/C1DU91DKP' & }
+ja-pandasarmes() { ${_ff_jeff} 'https://app.slack.com/client/T06TKQHH7/C06TKQHJ5' & }
+ja-cq4ds() { ${_ff_jeff} 'https://discord.com/channels/1024276579444072499/1026819320329801750' & }
+ja-bn200() { ${_ff_jeff} 'https://discord.com/channels/907988373900255232/907989413030674474' & }
+ja-np() { ${_ff_jeff} 'https://chat.n-peloton.fr/np/channels/town-square#' &}
+ja-pav() { ${_ff_jeff}  'https://framateam.org/place-au-velo/tips' & }
+ja-whatsapp() { ${_ff_jeff} 'https://web.whatsapp.com/' & }
+ja-mail() { ${_ff_jeff} 'https://mail.google.com/mail/u/0/#inbox' & }
+ja-cal() { ${_ff_jeff} 'https://calendar.google.com/calendar/u/0/r' & }
+ja-contacts() { ${_ff_jeff} 'https://contacts.google.com/' & }
+ja-keep() { ${_ff_jeff} 'https://keep.google.com/#home' & }
+ja-mastadon() { ${_ff_p27} 'https://piaille.fr/home' & }
+ja-twitter() { ${_ff_p27} 'https://www.twitter.com/' & }
+ja-velo() { ja-cyclopathes; ja-pav; ja-mastadon; ja-twitter; ja-np; }
+ja-ds() { ja-pandasarms; ja-cq4ds; }
+
+# p27
+p27-cyclopathes() { ${_ff_p27} 'https://app.slack.com/client/T1DU91AKX/C1DU91DKP' & }
+p27-pes() { ${_ff_p27} 'https://app.slack.com/client/T050TGUED/C050TGUJH' & }
+p27-fub() { ${_ff_p27} 'https://mattermost.fub.fr/fub-reseau/channels/town-square' ; }
+p27-pandasarmes() { ${_ff_p27} 'https://app.slack.com/client/T06TKQHH7/C06TKQHJ5' & }
+p27-cq4ds() { ${_ff_p27} 'https://discord.com/channels/1024276579444072499/1026819320329801750' & }
+p27-bn200() { ${_ff_p27} 'https://discord.com/channels/907988373900255232/907989413030674474' & }
+p27-np() { ${_ff_p27} 'https://chat.n-peloton.fr/np/channels/town-square#' &}
+p27-pav() { ${_ff_p27}  'https://framateam.org/place-au-velo/tips' & }
+p27-whatsapp() { ${_ff_p27} 'https://web.whatsapp.com/' & }
+p27-mail() { ${_ff_p27} 'https://mail.google.com/mail/u/0/#inbox' & }
+p27-cal() { ${_ff_p27} 'https://calendar.google.com/calendar/u/0/r' & }
+p27-contacts() { ${_ff_p27} 'https://contacts.google.com/' & }
+p27-keep() { ${_ff_p27} 'https://keep.google.com/#home' & }
+p27-mastadon() { ${_ff_p27} 'https://piaille.fr/home' & }
+p27-twitter() { ${_ff_p27} 'https://www.twitter.com/' & }
+p27-velo() { p27-cyclopathes; p27-pav; p27-mastadon; p27-twitter; p27-np; p27-pes; p27-fub; }
+p27-ds() { p27-pandasarms; p27-cq4ds; }
+p27-meteo() { ${_ff_p27} https://velo.professeurjoachim.com/; }
+p27-cgpt() { ${_ff_p27} https://chatgpt.com/; }
+p27-per() { ${_ff_p27} https://www.perplexity.ai/; }
+
+# Jellybooks
+jbks-mail() { ${_ff_jellybooks} 'https://mail.google.com/mail/u/0/#inbox' & }
+jbks-cal() { ${_ff_jellybooks} 'https://calendar.google.com/calendar/u/0/r' & }
+jbks-contacts() { ${_ff_jellybooks} 'https://contacts.google.com/' & }
+jbks-keep() { ${_ff_jellybooks} 'https://keep.google.com/#home' & }
+
+
+# Transport Nantes
+tn-slack() { ${_ff_tn} 'https://app.slack.com/client/T01N8G85N9J/' & }
+tn-mail() { ${_ff_tn} 'https://mail.google.com/mail/u/0/#inbox' & }
+tn-cal() { ${_ff_tn} 'https://calendar.google.com/calendar/u/0/r/month' & }
+tn-contacts() { ${_ff_tn} 'https://contacts.google.com/' & }
+tn-keep() { ${_ff_tn} 'https://keep.google.com/#home' & }
