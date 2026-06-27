@@ -4,6 +4,7 @@ auctex
 black
 bluez-tools
 bookworm
+brightnessctl
 build-essential
 cargo
 clang
@@ -107,6 +108,8 @@ okular-extra-backends
 pandoc
 paps
 percol
+pipewire
+pipewire-pulse
 pgformatter
 pipx
 protobuf-compiler
@@ -195,6 +198,7 @@ w3m
 wdiff
 webp-pixbuf-loader
 whois
+wireplumber
 wl-clipboard
 xautolock
 xclip
