@@ -68,7 +68,7 @@ for pkg in chromium firefox glow gron signal-desktop; do
 done
 echo "Finished installing packages and snaps."
 
-echo "Installing AI coding CLIs."
+echo "Installing npm tools."
 npm_bin="$(command -v npm)"
 if [[ -z "$npm_bin" ]]; then
     echo "npm not found after installing the node snap." >&2
@@ -77,10 +77,23 @@ fi
 mkdir -p "$HOME/.npm-global"
 "$npm_bin" config set prefix "$HOME/.npm-global" || exit 1
 export PATH="$HOME/.npm-global/bin:$PATH"
-"$npm_bin" install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli || exit 1
+npm_install_failed=0
+while IFS= read -r pkg || [[ -n "$pkg" ]]; do
+    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    echo " -> Installing $pkg..."
+    if ! "$npm_bin" install -g "$pkg"; then
+        echo "Failed to install npm package $pkg." >&2
+        npm_install_failed=1
+    fi
+done < 2404-LTS-npm.pkg
+if (( npm_install_failed )); then
+    echo "One or more npm packages failed to install." >&2
+    exit 1
+fi
 command -v claude >/dev/null || { echo "claude CLI was not installed on PATH." >&2; exit 1; }
 command -v codex >/dev/null || { echo "codex CLI was not installed on PATH." >&2; exit 1; }
 command -v gemini >/dev/null || { echo "gemini CLI was not installed on PATH." >&2; exit 1; }
+command -v mmdc >/dev/null || { echo "Mermaid CLI was not installed on PATH." >&2; exit 1; }
 
 
 echo "Now installing dotfiles and source code."
