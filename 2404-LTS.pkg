@@ -25,6 +25,7 @@ docker.io
 dstat
 elpa-epc
 emacs
+emacs-goodies-el
 exiftags
 exiftran
 fabric
@@ -109,9 +110,9 @@ okular-extra-backends
 pandoc
 paps
 percol
+pgformatter
 pipewire
 pipewire-pulse
-pgformatter
 pipx
 protobuf-compiler
 pylint
