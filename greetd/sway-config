@@ -1,5 +1,7 @@
 # exec "/usr/sbin/wlgreet; swaymsg exit"
-exec "/usr/local/bin/wlgreet --command 'ssh-agent sway'; swaymsg exit"
+# greetd doesn't set XDG_CURRENT_DESKTOP from the session's DesktopNames
+# as other display managers do, and sway doesn't set it either.
+exec "/usr/local/bin/wlgreet --command 'env XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway ssh-agent sway'; swaymsg exit"
 
 bindsym Mod4+shift+e exec swaynag \
 	-t warning \
