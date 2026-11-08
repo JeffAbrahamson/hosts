@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script is used to generate the list of files to be installed on
-# the new 24.04 host.
+# the new 26.04 host.
 #
 # Ahead of time, I should prepare ssh keys and deploy them.  Then load
 # them on the new host using a USB key.  This script should run under
@@ -34,7 +34,7 @@ sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo cp -f docker.list /etc/apt/sources.list.d/docker.list
 
-# Ookla speedtest: no noble package, but jammy works on noble.
+# Ookla speedtest: no resolute (or noble) package, but jammy works on resolute.
 echo "Adding Ookla speedtest package repository."
 curl -fsSL https://packagecloud.io/ookla/speedtest-cli/gpgkey \
     | sudo gpg --dearmor -o /etc/apt/keyrings/ookla_speedtest-cli-archive-keyring.gpg
@@ -45,12 +45,12 @@ https://packagecloud.io/ookla/speedtest-cli/ubuntu/ jammy main" \
 sudo apt update
 
 echo "Installing packages."
-for pkg in $(cat 2404-LTS.pkg); do
+for pkg in $(cat 2604-LTS.pkg); do
     echo " -> Installing $pkg..."
     sudo apt-get install -y -q "$pkg"
 done
 echo "Removing packages."
-for pkg in $(cat 2404-LTS-remove.pkg); do
+for pkg in $(cat 2604-LTS-remove.pkg); do
     echo " -> Removing $pkg..."
     sudo apt-get remove -y -q "$pkg"
 done
@@ -85,7 +85,7 @@ while IFS= read -r pkg || [[ -n "$pkg" ]]; do
         echo "Failed to install npm package $pkg." >&2
         npm_install_failed=1
     fi
-done < 2404-LTS-npm.pkg
+done < 2604-LTS-npm.pkg
 if (( npm_install_failed )); then
     echo "One or more npm packages failed to install." >&2
     exit 1

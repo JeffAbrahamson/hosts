@@ -56,7 +56,7 @@ fi
 echo ""
 echo "=== Starting main installation ==="
 cd "${USB}/hosts/"
-chmod 755 2404-LTS.sh
+chmod 755 2604-LTS.sh
 
 # Drop inherited agent/keyring state before ssh-agent creates a fresh one.
 while IFS='=' read -r name _; do
@@ -66,7 +66,7 @@ while IFS='=' read -r name _; do
 done < <(env)
 
 echo "Starting fresh ssh-agent..."
-ssh-agent ./2404-LTS.sh
+ssh-agent ./2604-LTS.sh
 
 echo ""
 echo "=== Installation finished ==="
