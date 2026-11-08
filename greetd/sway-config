@@ -1,6 +1,6 @@
 # greetd doesn't set XDG_CURRENT_DESKTOP from the session's DesktopNames
 # as other display managers do, and sway doesn't set it either.
-exec "/usr/local/bin/wlgreet --command 'env XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway ssh-agent sway'; swaymsg exit"
+exec "/usr/sbin/wlgreet --command 'env XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway ssh-agent sway'; swaymsg exit"
 
 # Ctrl+Shift+Q, then y (power off), r (reboot), or n/Esc/Ctrl+G (cancel).
 # There's no bar, so the mode gives no visual feedback.  Plain systemctl:
