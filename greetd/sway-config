@@ -1,21 +1,16 @@
-# exec "/usr/sbin/wlgreet; swaymsg exit"
 # greetd doesn't set XDG_CURRENT_DESKTOP from the session's DesktopNames
 # as other display managers do, and sway doesn't set it either.
 exec "/usr/local/bin/wlgreet --command 'env XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway ssh-agent sway'; swaymsg exit"
 
-bindsym Mod4+shift+e exec swaynag \
-	-t warning \
-	-m 'What do you want to do?' \
-	-b 'Poweroff' 'systemctl poweroff --check-inhibitors' \
-	-b 'Reboot' 'systemctl reboot --check-inhibitors'
-
-# set $shutdown_mode "Power off (y) or reboot (r)? [Esc/n cancels]"
+# Ctrl+Shift+Q, then y (power off), r (reboot), or n/Esc/Ctrl+G (cancel).
+# There's no bar, so the mode gives no visual feedback.  Plain systemctl:
+# -i needs admin auth in polkit, which _greetd can't provide.
 set $shutdown_mode "Shutdown?"
 
 bindsym Control+Shift+Q mode "$shutdown_mode"
 mode "$shutdown_mode" {
-    bindsym y          exec systemctl poweroff --check-inhibitors
-    bindsym r          exec systemctl reboot --check-inhibitors
+    bindsym y          exec systemctl poweroff
+    bindsym r          exec systemctl reboot
     bindsym Control+g  mode default
     bindsym n          mode default
     bindsym Escape     mode default
