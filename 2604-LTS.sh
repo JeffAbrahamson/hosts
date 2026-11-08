@@ -157,6 +157,8 @@ sudo install -D -m 0644 /dev/null /etc/greetd/background
 mkdir -p "$HOME/.desktop-images"
 touch "$HOME/.desktop-images/empty.png"
 
-# Let me dim the screen.  Cf. error from  `light -v 1 -U 5`
+# Let me dim the screen.  light's udev rule makes the backlight writable
+# by group video; brightnessctl (built without logind on 26.04) relies
+# on that too.
 sudo adduser jeff video
 sudo adduser jeff docker
