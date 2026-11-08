@@ -28,8 +28,8 @@ docker-ce
 docker-ce-cli
 docker-compose-plugin
 elpa-epc
-emacs
 emacs-goodies-el
+emacs-pgtk
 exiftags
 exiftran
 fabric
