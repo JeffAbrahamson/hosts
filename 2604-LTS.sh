@@ -27,12 +27,29 @@ for key in "${KEYS[@]}"; do
     ssh-add "$keyfile" || exit 1
 done
 
+# Docker: use Docker's own repository, as recommended at
+# https://docs.docker.com/engine/install/ubuntu/ .  Ubuntu's docker.io
+# lags well behind (on 26.04, Compose 2.40 vs 5.x) and conflicts with
+# Docker's packages, so remove any distribution packages first.
 echo "Adding docker package repository."
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg
+sudo apt remove -y $(dpkg --get-selections docker.io docker-compose docker-compose-v2 \
+    docker-doc docker-buildx podman-docker containerd runc 2>/dev/null | cut -f1)
+# An older one-line source (as left by an in-place upgrade) would clash
+# with this one's Signed-By and break apt update.
+sudo rm -f /etc/apt/sources.list.d/docker.list /etc/apt/keyrings/docker.gpg
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo cp -f docker.list /etc/apt/sources.list.d/docker.list
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo tee /etc/apt/sources.list.d/docker.sources >/dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
 # Ookla speedtest: no resolute (or noble) package, but jammy works on resolute.
 echo "Adding Ookla speedtest package repository."
