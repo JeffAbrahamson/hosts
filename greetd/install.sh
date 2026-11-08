@@ -17,6 +17,7 @@ cd "$(dirname "$(realpath "$0")")"
 
 local_dir=/etc/greetd/local
 dropin=/etc/systemd/system/greetd.service.d/local-config.conf
+polkit_rule=/etc/polkit-1/rules.d/50-greetd-power.rules
 
 for bin in /usr/sbin/greetd /usr/sbin/wlgreet /usr/bin/sway; do
     if [[ ! -x "$bin" ]]; then
@@ -76,6 +77,14 @@ install_if_changed config.toml "$local_dir/config.toml"
 if ! cmp -s greetd-override.conf "$dropin" 2>/dev/null; then
     install_if_changed greetd-override.conf "$dropin"
     sudo systemctl daemon-reload
+fi
+# polkitd notices new rules by itself.  /etc/polkit-1/rules.d isn't
+# readable by us, so compare as root.
+if ! sudo cmp -s greetd-power.rules "$polkit_rule"; then
+    sudo install -D -m 0644 greetd-power.rules "$polkit_rule"
+    echo "Installed $polkit_rule."
+else
+    echo "$polkit_rule is up to date."
 fi
 
 restore_conffile wlgreet /etc/greetd/sway-config

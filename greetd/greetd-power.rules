@@ -1,0 +1,23 @@
+// Installed by greetd/install.sh as
+// /etc/polkit-1/rules.d/50-greetd-power.rules .
+//
+// Let the greeter power off and reboot even when another user still has
+// a session.  A session lingers in "closing" after logout while any of
+// its processes survive (a status script that hasn't noticed sway is
+// gone, say), and then logind asks for the *-multiple-sessions actions,
+// which by default need admin authentication that _greetd can't give.
+// Anyone at the greeter can hold the power button anyway.
+//
+// Inhibitors are still honoured: no *-ignore-inhibit actions here.
+polkit.addRule(function(action, subject) {
+    var allowed = [
+        "org.freedesktop.login1.power-off",
+        "org.freedesktop.login1.power-off-multiple-sessions",
+        "org.freedesktop.login1.reboot",
+        "org.freedesktop.login1.reboot-multiple-sessions",
+    ];
+    if (subject.user == "_greetd" && subject.local && subject.active
+        && allowed.indexOf(action.id) >= 0) {
+        return polkit.Result.YES;
+    }
+});

@@ -7,6 +7,11 @@ after editing the config here.  It installs:
   greetd/config.toml           -> /etc/greetd/local/config.toml
   greetd/sway-config           -> /etc/greetd/local/sway-config
   greetd/greetd-override.conf  -> /etc/systemd/system/greetd.service.d/local-config.conf
+  greetd/greetd-power.rules    -> /etc/polkit-1/rules.d/50-greetd-power.rules
+
+The polkit rule lets the greeter's power-off/reboot keys work when a
+logged-out session hasn't finished closing (some process of it still
+running), which otherwise makes logind demand admin authentication.
 
 The drop-in starts greetd with `--config /etc/greetd/local/config.toml`.
 Nothing we edit is a package conffile, so package upgrades never stop to
