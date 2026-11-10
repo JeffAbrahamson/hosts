@@ -45,6 +45,22 @@ under a fresh ssh-agent.  2604-LTS.sh prompts for each key passphrase
 clones repositories.  When it finishes, install-from-usb.sh prints
 AFTER-INSTALL.md.
 
+### Host roles
+
+2604-LTS.sh sets up a host as a desktop (the default) or as a headless
+server.  It picks the role from the hostname (`role_for_host`);
+`HOST_ROLE=desktop` or `HOST_ROLE=server` overrides that.
+
+  2604-LTS-common.pkg           — packages for every host
+  2604-LTS-{desktop,server}.pkg — packages for each role
+  2604-LTS-{desktop,server}-remove.pkg — packages to remove
+  {desktop,server}-git          — repositories to clone into ~/src/jma
+
+Desktops also get Docker, greetd, snaps, the npm tools in
+2604-LTS-npm.pkg, ssh keys, srd, tsd and the extra repositories.
+Servers get none of that, and need no USB key: clone this repo and run
+2604-LTS.sh.  Cf. fileserver/README.md for siegfried.
+
 ## Post-automation
 
 After `install-from-usb.sh` completes, follow `AFTER-INSTALL.md`.

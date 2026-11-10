@@ -1,102 +1,69 @@
-# Make myself at home
+# siegfried, the fileserver
 
-## Set up my environment
+siegfried is a small headless box (2-core AMD G-T56N, 3.4 GB RAM,
+60 GB system disk) on the home network.  It holds the big data disks,
+runs pi-hole, shares the printer, and records network and disk
+statistics.  There is no X and no display manager: log in over ssh.
 
-    mkdir -p $HOME/src/jma
-    cd $HOME/src/jma
-    git clone https://github.com/JeffAbrahamson/dotfiles.git
-    git clone https://github.com/JeffAbrahamson/hosts.git
-    cd dotfiles
-    ./install.sh
+## Setting up
 
-## Install needed software
+    mkdir -p ~/src/jma
+    git clone https://github.com/JeffAbrahamson/hosts.git ~/src/jma/hosts
+    ~/src/jma/hosts/2604-LTS.sh
 
-    sudo apt-get install emacs python unison x11-apps
+`2604-LTS.sh` knows siegfried is a server (cf. `role_for_host`; set
+`HOST_ROLE=server` to treat another host the same way).  As a server it
+installs `2604-LTS-common.pkg` and `2604-LTS-server.pkg`, removes
+`2604-LTS-server-remove.pkg`, sets up Ookla speedtest, clones the
+repositories in `server-git` over https, and runs the dotfiles
+`make install`.  It installs no ssh keys or other secrets: use `ssh -A`
+on the rare occasions siegfried needs to reach elsewhere as me.
 
+Networking is dhcpcd/ifupdown.  Don't install NetworkManager here: it
+could take over the interface and cut off ssh.
 
-# Disks
+The dotfiles firewall step sets the ufw rules for siegfried: ssh
+(rate-limited), 53/udp and 80/tcp for pi-hole, 631/tcp for CUPS.
 
-    sudo mkdir /d1 /d2
+## Data disks
 
-The disk labels are fs-2TB-1  fs-2TB-2.
+Four LUKS-encrypted disks, mounted at `/jma-4t`, `/jma-3t`, `/sb-4t`
+and `/sb-r4t`.  They are deliberately not in `/etc/crypttab` or
+`/etc/fstab`: after a reboot, unlock and mount them by hand with
 
-    $ ls /dev/disk/by-label/
+    luks-mount-all
 
-The lsblk command can also be helpful in exploring attached block devices.
+(from dotfiles), which reads `~/.luksmountrc` (`LUKS_UUID MOUNT_POINT`
+per line).  `luks-mount-all -u MOUNT_POINT` adds a new volume.
 
-So add these lines to /etc/fstab:
+The `lsblk` and `ls /dev/disk/by-uuid/` commands help to identify
+disks.
 
-    LABEL=fs-2TB-1    /d1    ext4    errors=remount-ro    0    2
-    LABEL=fs-2TB-2    /d2    ext4    errors=remount-ro    0    3
+## Services
 
-# Accounts
+* **pi-hole**, installed with its own installer, not by `2604-LTS.sh`.
+  It runs lighttpd and answers DNS on port 53.  It needed `libgamin0`
+  (replacing the obsolete libfam) for lighttpd to start.
+* **CUPS** shares the HP DeskJet 2800 to the network.
+* **sshd**.
 
-Setup an account for Stéphane.  For password, cf. srd -> raspberry pi.
+Netatalk (AFP/Time Machine and the legacy AppleTalk daemons) is no
+longer used; `2604-LTS.sh` removes it.
 
-    sudo adduser stephane
+## Crontab
 
-Confirm proper ownerships.
+My crontab is backed up daily to
+`/jma-4t/jeff/files/data/hosts/siegfried/crontab`.  It runs:
 
-    sudo chown -R jeff:jeff /d2/jeff
-    sudo chown -R stephane:stephane /d1/stephane
+* `disk-usage.sh` hourly, recording usage of the data disks;
+* `speedtest` hourly (Ookla rate-limits more frequent runs);
+* `up-monitor` every five minutes;
+* a daily `rsync --delete` mirror of `/jma-4t/jeff/` to `/jma-3t/jeff/`
+  and `/sb-r4t/jeff/`.
 
-Add my ssh keys.
-
-    cd
-    mkdir .ssh
-    chmod 700 .ssh
-    cd .ssh
-    cat > authorized_keys
-    # And paste my current keys, available in /d2/jeff/machines/*/.ssh/id_rsa.pub
-    
-
-# Apps
-
-## Provide a data directory
-
-    mkdir -p $HOME/data/hosts/$(hostname)
-
-## Install speedtest
-
-    cd $HOME/src
-    git clone https://github.com/sivel/speedtest-cli.git
-    cd speedtest
-    cp speedtest_cli.py $HOME/bin
-    # Test it
-    $HOME/bin/speedtest.py --simple
-
-## Install crontab
-
-It should live in `$DATA/hosts/$(hostname)`
-
-## Setup timemachine for Stéphane
-
-    sudo apt-get install netatalk
-    # Copy configuration from $HOME/src/jma/hosts/siegfried/
-    #   /etc/netatalk/AppleVolumes.default (setup serving directory and turn on time machine support)
-    #   /etc/default/netatalk (turn on CNID_MEATD_RUN and AFPD_RUN)
-
-This no longer works.  That is, it works on the server ( think), but
-his new Mac is unable to connect.  At the same time, the netatalk
-package version bumped up, so maybe it's that.
-
-I should probably try setting this up to run via samba instead and see
-how that goes.
+Statistics land in `~/data/hosts/siegfried/`.
 
 ## Unison
 
-Copy the `$HOME/.unison/` cache files from the old fileserver if available.
-
-## Pi-hole
-
-The pi-hole installation required my explicitly installing libgamin0,
-which replaces libfam, which appears to be obsolete.  This had
-prevented lighttpd from starting.
-
-
-## Things to do
-
-* Update disk information (/d3, /d4).
-* Set up sync on /d3, /d4.
-* Note that /d1 and /d2 should be on the USB3 ports.
-* Set up printer, document
+Copy the `~/.unison/` cache files from the old fileserver if
+available.

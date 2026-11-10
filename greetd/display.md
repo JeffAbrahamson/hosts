@@ -1,5 +1,5 @@
 The greeter is wlgreet running under sway, started by greetd.  Both
-come from the Ubuntu packages (`greetd` and `wlgreet` in 2604-LTS.pkg).
+come from the Ubuntu packages (`greetd` and `wlgreet` in 2604-LTS-desktop.pkg).
 
 2604-LTS.sh runs greetd/install.sh, which can also be re-run by hand
 after editing the config here.  It installs:

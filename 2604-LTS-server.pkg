@@ -1,0 +1,5 @@
+# Packages for headless servers (siegfried), on top of 2604-LTS-common.pkg.
+cryptsetup
+emacs-nox
+hdparm
+sysstat

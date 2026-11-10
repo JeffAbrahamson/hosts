@@ -2,6 +2,8 @@
 
 Manual steps to run after `install-from-usb.sh` completes.
 
+These are for desktop hosts.  For siegfried, cf. `fileserver/README.md`.
+
 ## Files and Sync
 
 Once I can connect to siegfried, copy pertinent files.  The precise host

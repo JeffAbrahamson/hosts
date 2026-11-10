@@ -1,0 +1,11 @@
+# Netatalk (AFP and the legacy AppleTalk daemons): no longer used.
+a2boot
+atalkd
+macipgw
+netatalk
+netatalk-tools
+papd
+timelord
+# No X on a server.  (Installing emacs-nox replaces emacs-gtk.)
+emacs-gtk
+x11-apps

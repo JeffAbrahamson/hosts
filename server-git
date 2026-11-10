@@ -1,0 +1,4 @@
+# Repositories for servers: https, since servers hold no ssh keys.
+https://github.com/JeffAbrahamson/dotfiles.git
+https://github.com/JeffAbrahamson/hosts.git
+https://github.com/JeffAbrahamson/pic-tools.git
