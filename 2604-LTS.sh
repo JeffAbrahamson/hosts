@@ -176,6 +176,16 @@ for pkg in chromium firefox glow gron signal-desktop; do
     echo " -> Installing $pkg..."
     sudo snap install "$pkg" || failures+=("snap install $pkg")
 done
+
+# On a refresh, snapd-desktop-integration launches the snap-store (App
+# Center) window, which is useful under GNOME but just noise under sway.
+# Without it, snapd's own session agent sends plain notifications.
+echo "Removing the GNOME snap update UI."
+for pkg in snap-store snapd-desktop-integration; do
+    if snap list "$pkg" >/dev/null 2>&1; then
+        sudo snap remove --purge "$pkg" || failures+=("snap remove $pkg")
+    fi
+done
 echo "Finished installing packages and snaps."
 
 # npm install -g also upgrades what's already there, which is fine.
