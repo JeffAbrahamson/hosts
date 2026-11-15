@@ -42,8 +42,12 @@ disks.
 ## Services
 
 * **pi-hole**, installed with its own installer, not by `2604-LTS.sh`.
-  It runs lighttpd and answers DNS on port 53.  It needed `libgamin0`
-  (replacing the obsolete libfam) for lighttpd to start.
+  It answers DNS on port 53.  Since v6, pihole-FTL serves the admin UI
+  itself on ports 80 and 443 and the upgrade removes lighttpd.  The
+  v6 upgrade set `webserver.port` to 8080, presumably because lighttpd
+  still held port 80; restore it with
+  `sudo pihole-FTL --config webserver.port '80o,443os,[::]:80o,[::]:443os'`
+  and restart `pihole-FTL`.
 * **CUPS** shares the HP DeskJet 2800 to the network.
 * **sshd**.
 
