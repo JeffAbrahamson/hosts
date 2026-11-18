@@ -74,4 +74,4 @@ On each host for which I want to be able to print:
 
 ## Session
 
-Log out and log back in in i3 or sway.
+Log out and log back in in sway.

@@ -63,7 +63,6 @@ gvfs-fuse
 httrack
 httrack-doc
 hunspell-fr
-i3
 imagemagick
 imv
 inkscape
@@ -163,10 +162,7 @@ python3-zstandard
 python3-zstd
 qpdf
 qrencode
-redshift
 rustc
-rxvt-unicode
-scrot
 slurp
 sqlformat
 sshfs
@@ -200,8 +196,6 @@ webp-pixbuf-loader
 wireplumber
 wl-clipboard
 wlgreet
-xautolock
-xclip
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
 xournalpp
